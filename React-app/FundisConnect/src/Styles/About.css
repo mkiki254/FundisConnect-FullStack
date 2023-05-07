@@ -1,0 +1,21 @@
+.about-title{
+    font-size: 36px;
+    text-align: center;
+    color: #de7709;
+}
+
+.about-content {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.about-content > p {
+    margin: 20px;
+    font-size: 20px;
+    max-width: 30vw;
+}
+
+.about-content > img {
+    width: 400px;
+}

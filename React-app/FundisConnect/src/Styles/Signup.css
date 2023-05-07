@@ -1,0 +1,21 @@
+.form-control {
+    width: 50% !important;
+  }
+  
+  .my-form {
+    margin-left: 30vw;
+  }
+
+  .form-title{
+    font-size: 36px;
+    text-align: center;
+    color: #de7709;
+  }
+
+  .alternative {
+    display: flex;
+  }
+
+  .form-submit{
+    margin: 20px 30px;
+  }

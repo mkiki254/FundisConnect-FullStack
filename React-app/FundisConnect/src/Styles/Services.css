@@ -1,0 +1,35 @@
+.services{
+    margin: 20px;
+    padding: 20px;
+}
+
+.services--title {
+    font-size: 36px;
+    text-align: center;
+    color: #de7709;
+}
+
+.service{
+    display: flex;
+    margin-left: 30vh;
+}
+
+.service img {
+    width: 300px;
+    margin: 20px;
+}
+
+.service p {
+    margin: 20px;
+}
+
+.service--title {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.service--description {
+    font-size: 20px;
+}
+
+

@@ -1,0 +1,29 @@
+.choosen{
+    margin: 20px;
+    padding: 20px;
+}
+
+.choosen--prompt{
+    font-size: 36px;
+    text-align: center;
+    color: #de7709;
+}
+
+.reason{
+    display: flex;
+    justify-content: space-around;
+}
+
+.reason--listed{
+    max-width: 200px;
+    margin: 20px;
+}
+
+.reason--stated{
+    color: #de7709;
+    font-size: 28px;
+}
+
+.reason--explained{
+    font-size: 20px;
+}

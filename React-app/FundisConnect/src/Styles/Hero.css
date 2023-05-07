@@ -1,0 +1,24 @@
+.hero{
+    /* background-image: url(images/artisan.jpg); */
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 20px;
+    padding: 20px;
+ }
+ 
+ .hero--message{
+     font-size: 48px;
+     margin: 20px;
+     padding: 20px;
+     color: #FFF;
+     font-weight: 800;
+ }
+ 
+ /* Button{
+     margin: 20px;
+     padding: 20px;
+     color: #FFF;
+     font-size: 50px;
+     background-color: #3C42C9;
+ } */
+

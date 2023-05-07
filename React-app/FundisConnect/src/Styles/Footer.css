@@ -1,0 +1,36 @@
+footer{
+    background-color: #362121;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.footer-content {
+    margin: 20px;
+}
+
+.contact{
+    color: #FFF;
+}
+
+.contact-title {
+    font-size: 24px;
+}
+
+.contact-info {
+    font-size: 18px;
+}
+
+.sitemap {
+    color: #fff;
+}
+
+.email-contact, .phone-contact {
+    display: flex;
+    margin: 10px;
+}
+
+.email-contact > img, .phone-contact >img {
+    width: 30px;
+    margin-right: 10px;
+}
