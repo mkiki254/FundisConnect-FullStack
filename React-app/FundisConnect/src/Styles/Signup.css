@@ -13,9 +13,17 @@
   }
 
   .alternative {
-    display: flex;
+    margin-left: 10vw;
   }
 
   .form-submit{
     margin: 20px 30px;
+  }
+
+  .radio-options {
+    display: flex;
+  }
+
+  .option-1 {
+    margin-right: 30px;
   }

@@ -19,6 +19,7 @@ export default function Signup(){
     const [registrationToggle, setRegistrationToggle] = useState(false)
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
+    const [usertype, setUsertype] = useState('')
     const [password, setPassword] = useState('')
 
     useEffect(() => {
@@ -46,6 +47,7 @@ export default function Signup(){
             {
                 email: email,
                 username: username,
+                usertype: usertype,
                 password: password
             }
         ).then(function(res){
@@ -84,6 +86,11 @@ export default function Signup(){
         })
     }
 
+    //handling the radio button
+    function handleUsertype(e){
+        setUsertype(e.target.value)
+    }
+
     if (currentUser) {
         return (
             <>
@@ -114,15 +121,27 @@ export default function Signup(){
                             <Form.Control type="text" placeholder="Enter username" value={username} onChange={e => setUsername(e.target.value)} />
                         </Form.Group>
 
+                        <Form.Group className="mb-3" controlId="formBasicRadio">
+                            <Form.Label>Register As:</Form.Label>
+                            <div className="radio-options">
+                                <Form.Group className="mb-3 option-1" controlId="customer-option">
+                                    <Form.Check type="radio" label="Customer" name="user-type" value="Customer" checked={usertype === "Customer"} onChange={handleUsertype} />
+                                </Form.Group> 
+                                <Form.Group className="mb-3" controlId="artisan-option">
+                                    <Form.Check type="radio" label="Artisan" name="user-type" value="Artisan" checked={usertype === "Artisan"} onChange={handleUsertype} />
+                                </Form.Group> 
+                            </div>
+                        </Form.Group>
+
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}/>
                         </Form.Group>
                         <div className="alternative">
                             <div className="form-submit">
-                                <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                                {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                     <Form.Check type="checkbox" label="Check me out" />
-                                </Form.Group>
+                                </Form.Group> */}
 
                                 <Button variant="primary" type="submit">Register</Button>
                             </div>
@@ -151,9 +170,9 @@ export default function Signup(){
                     </Form.Group>
                     <div className="alternative">
                         <div className="form-submit">
-                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                            {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                 <Form.Check type="checkbox" label="Check me out" />
-                            </Form.Group>
+                            </Form.Group> */}
 
                             <Button variant="primary" type="submit">Log in</Button>
                         </div>
