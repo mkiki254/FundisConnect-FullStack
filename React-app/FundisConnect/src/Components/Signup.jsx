@@ -139,9 +139,9 @@ export default function Signup(){
                         </Form.Group>
                         <div className="alternative">
                             <div className="form-submit">
-                                {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                                <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                     <Form.Check type="checkbox" label="Check me out" />
-                                </Form.Group> */}
+                                </Form.Group>
 
                                 <Button variant="primary" type="submit">Register</Button>
                             </div>
@@ -170,9 +170,9 @@ export default function Signup(){
                     </Form.Group>
                     <div className="alternative">
                         <div className="form-submit">
-                            {/* <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                 <Form.Check type="checkbox" label="Check me out" />
-                            </Form.Group> */}
+                            </Form.Group>
 
                             <Button variant="primary" type="submit">Log in</Button>
                         </div>

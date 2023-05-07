@@ -13,7 +13,7 @@
   }
 
   .alternative {
-    margin-left: 10vw;
+    display: flex;
   }
 
   .form-submit{
