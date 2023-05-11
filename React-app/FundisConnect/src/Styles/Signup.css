@@ -1,29 +1,29 @@
-.form-control {
-    width: 50% !important;
-  }
+.msg-alert, .form-control {
+  width: 50% !important;
+}
   
-  .my-form {
-    margin-left: 30vw;
-  }
+.my-form {
+  margin-left: 30vw;
+}
 
-  .form-title{
-    font-size: 36px;
-    text-align: center;
-    color: #de7709;
-  }
+.form-title{
+  font-size: 36px;
+  text-align: center;
+  color: #de7709;
+}
 
-  .alternative {
-    display: flex;
-  }
+.alternative {
+  display: flex;
+}
 
-  .form-submit{
-    margin: 20px 30px;
-  }
+.form-submit{
+  margin: 20px 30px;
+}
 
-  .radio-options {
-    display: flex;
-  }
+.radio-options {
+  display: flex;
+}
 
-  .option-1 {
-    margin-right: 30px;
-  }
+.option-1 {
+  margin-right: 30px;
+}

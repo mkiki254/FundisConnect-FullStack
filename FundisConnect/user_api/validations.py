@@ -1,20 +1,24 @@
-from django.core.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from django.http import JsonResponse
+
+
 UserModel = get_user_model()
 
 def custom_validation(data):
     email = data['email'].strip()
     username = data['username'].strip()
     password = data['password'].strip()
+
     ##
     if not email or UserModel.objects.filter(email=email).exists():
-        raise ValidationError('choose another email')
+        raise ValidationError('Email already exists. Choose another email')
     ##
     if not password or len(password) < 8:
-        raise ValidationError('choose another password, min 8 characters')
+        raise ValidationError('The password must have a minimum of 8 characters')
     ##
     if not username:
-        raise ValidationError('choose another username')
+        raise ValidationError('Please enter your username')
     return data
 
 
