@@ -1,6 +1,7 @@
 import '../Styles/Signup.css'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import Alert from 'react-bootstrap/Alert';
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
@@ -15,12 +16,15 @@ const client = axios.create({
 
 export default function Signup(){
 
-    const [currentUser, setCurrentUser] = useState(false)
+    const [currentUser, setCurrentUser] = useState()
     const [registrationToggle, setRegistrationToggle] = useState(false)
     const [email, setEmail] = useState('')
     const [username, setUsername] = useState('')
     const [usertype, setUsertype] = useState('')
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [error, setError] = useState(false)
+    const [errorMsg, setErrorMsg] = useState('')
 
     useEffect(() => {
         client.get("/api/user").then(
@@ -42,29 +46,47 @@ export default function Signup(){
 
     function submitRegistration(e) {
         e.preventDefault();
-        client.post(
-            "/api/register",
-            {
-                email: email,
-                username: username,
-                usertype: usertype,
-                password: password
-            }
-        ).then(function(res){
+        if (password != confirmPassword){
+           setError(true)
+           setErrorMsg("Passwords do not match")
+        }else{
+            setError(false)
             client.post(
-                "/api/login",
-                {
-                    email: email,
-                    password: password
-                }
-            ).then(function(res){
-                setCurrentUser(true)
-            })
-        })
-    }
+                    "/api/register",
+                    {
+                        email: email,
+                        username: username,
+                        usertype: usertype,
+                        password: password
+                    }
+                ).then(function(res){
+                    client.post(
+                        "/api/login",
+                        {
+                            email: email,
+                            password: password
+                        }
+                    ).then(function(res){
+                        const usr = res.data
+                        setCurrentUser(usr)
+                        setEmail("")
+                        setUsername("")
+                        setUsertype("")
+                        setPassword("")
+                        setConfirmPassword("")
+                    })
+                }).catch(({ response }) => {
+                    const msg = response.data.join(", ");  
+                    setError(true);
+                    setErrorMsg(msg);
+                })
+            }
+        }
+        
 
     function submitLogin(e){
         e.preventDefault()
+        setError(false)
         client.post(
             "/api/login",
             {
@@ -72,7 +94,14 @@ export default function Signup(){
                 password: password
             }
         ).then(function(res){
-            setCurrentUser(true)
+            const usr = res.data;
+            setCurrentUser(usr);
+            setEmail("");
+            setPassword("");
+        }).catch(({ response }) => {
+            const msg = response.data.join(", ");  
+            setError(true);
+            setErrorMsg(msg);
         })
     }
 
@@ -108,6 +137,7 @@ export default function Signup(){
                 <div>
                     <h3 className="form-title">Registration</h3>
                     <Form className="my-form" onSubmit={e => submitRegistration(e)}>
+                        {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
@@ -137,6 +167,11 @@ export default function Signup(){
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}/>
                         </Form.Group>
+                        <Form.Group className="mb-3" controlId="formBasicPassword2">
+                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Control type="password" placeholder="confirm Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}/>
+                        </Form.Group>
+
                         <div className="alternative">
                             <div className="form-submit">
                                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
@@ -156,6 +191,7 @@ export default function Signup(){
                 <div>
                      <h3 className="form-title">Login</h3>
                     <Form className="my-form" onSubmit={e => submitLogin(e)}>
+                    {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />

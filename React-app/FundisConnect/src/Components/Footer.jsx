@@ -21,7 +21,7 @@ export default function Footer(){
                     <img src="images/email.png" alt="email icon" />
                     <p className="contact-info">fundisconnect@company.com</p>
                 </div>
-                <div class="phone-contact">
+                <div className="phone-contact">
                     <img src="images/phone.png" alt="phone icon" />
                     <p className="contact-info">0714456992</p>
                 </div>
