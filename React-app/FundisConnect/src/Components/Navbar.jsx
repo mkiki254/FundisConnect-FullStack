@@ -40,12 +40,10 @@ export default function Navbar(){
         <>
         <div>
             <header>
-                <Link to="/" className="links"> 
-                    <div className="logo">
-                        <h2>FundisConnect</h2>
-                        <p>An artisan just a click away</p>
-                    </div>
-                </Link>
+                <div className="logo">
+                    <h2>FundisConnect</h2>
+                    <p>An artisan just a click away</p>
+                </div>                
                 <nav>
                 <ul>
                     {isLoggedIn && <p>Hello, {usrname}</p>} 
