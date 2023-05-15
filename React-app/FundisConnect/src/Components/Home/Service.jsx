@@ -4,8 +4,8 @@ export default function Service(props){
         <div className="service">
             <img src={props.default_picture} alt="electrical works" />
             <div>
-                <p class="service--title">{props.title}</p>
-                <p class="service--description">{props.description}</p>
+                <p className="service--title">{props.title}</p>
+                <p className="service--description">{props.description}</p>
             </div>
         </div>
         </>

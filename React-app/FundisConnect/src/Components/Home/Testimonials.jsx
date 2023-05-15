@@ -4,7 +4,7 @@ export default function Testimonials(){
     return (
         <>
         <div className="testimonials">
-            <h3 class="testimonials-title">Customer Testimonials</h3>
+            <h3 className="testimonials-title">Customer Testimonials</h3>
             <div className="testimonial">
                 < Testimony 
                 comment = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit, neque? Rem, laborum cumque. Est hic reprehenderit possimus nam nemo perferendis perspiciatis veritatis nostrum beatae consequatur!"

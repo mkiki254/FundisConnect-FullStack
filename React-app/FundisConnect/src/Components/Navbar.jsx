@@ -16,7 +16,7 @@ export default function Navbar(){
 
     const { userDetails } = useContext(AuthContext)
     const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext)
-    const [username, setUsername] = useState()
+    const [username, setUsername] = useState('user')
 
     useEffect(() => {
         userDetails && setUsername(userDetails.user.username)
