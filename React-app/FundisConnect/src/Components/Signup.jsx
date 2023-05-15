@@ -2,8 +2,9 @@ import '../Styles/Signup.css'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Alert from 'react-bootstrap/Alert';
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
+import { AuthContext } from './AuthContext';
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -15,7 +16,8 @@ const client = axios.create({
 
 
 export default function Signup(){
-
+    const { setUserDetails } = useContext(AuthContext)
+    const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext)
     const [currentUser, setCurrentUser] = useState()
     const [registrationToggle, setRegistrationToggle] = useState(false)
     const [email, setEmail] = useState('')
@@ -30,11 +32,18 @@ export default function Signup(){
         client.get("/api/user").then(
             function(res){
                 setCurrentUser(true)
+                setIsLoggedIn(true)
+                const usr = res.data
+                setUserDetails(usr)
             }
+        ).then(
+            !(isLoggedIn) && setCurrentUser(false)
         ).catch(function(error){
             setCurrentUser(false)
+            setIsLoggedIn(false)
+            setUserDetails(null)
         })
-    }, [])
+    }, [currentUser])
 
     function update_form_btn(){
         if (registrationToggle){
@@ -105,28 +114,15 @@ export default function Signup(){
         })
     }
 
-    function submitLogout(e){
-        e.preventDefault()
-        client.get(
-            "/api/logout",
-            {withCredentials: true}
-        ).then(function(res){
-            setCurrentUser(false)
-        })
-    }
-
     //handling the radio button
     function handleUsertype(e){
         setUsertype(e.target.value)
     }
 
-    if (currentUser) {
+    if (isLoggedIn) {
         return (
             <>
-            <Form onSubmit={e => submitLogout(e)} className="my-form">
-            <Button variant="primary" type="submit">Logout</Button>
-            </Form>
-            <h3 class="about-title">You are Logged In</h3>
+            <h3 className="about-title">You are Logged In</h3>
             </>
         )
     }

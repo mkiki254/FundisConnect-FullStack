@@ -7,6 +7,7 @@ import Signup from './Components/Signup'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './Styles/App.css'
 
+
 export default function App(){
   return (
     <>
