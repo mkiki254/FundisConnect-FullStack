@@ -119,20 +119,68 @@ export default function Signup(){
         setUsertype(e.target.value)
     }
 
-    if (isLoggedIn) {
+    if (!isLoggedIn){
         return (
-            <>
-            <h3 className="about-title">You are Logged In</h3>
-            </>
-        )
-    }
-    return (
-        <>   
-        {
-            registrationToggle ? (
-                <div>
-                    <h3 className="form-title">Registration</h3>
-                    <Form className="my-form" onSubmit={e => submitRegistration(e)}>
+            <>   
+            {
+                registrationToggle ? (
+                    <div>
+                        <h3 className="form-title">Registration</h3>
+                        <Form className="my-form" onSubmit={e => submitRegistration(e)}>
+                            {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
+                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                                <Form.Label>Email address</Form.Label>
+                                <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
+                                <Form.Text className="text-muted">
+                                We'll never share your email with anyone else.
+                                </Form.Text>
+                            </Form.Group>
+    
+                            <Form.Group className="mb-3" controlId="formBasicText">
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control type="text" placeholder="Enter username" value={username} onChange={e => setUsername(e.target.value)} />
+                            </Form.Group>
+    
+                            <Form.Group className="mb-3" controlId="formBasicRadio">
+                                <Form.Label>Register As:</Form.Label>
+                                <div className="radio-options">
+                                    <Form.Group className="mb-3 option-1" controlId="customer-option">
+                                        <Form.Check type="radio" label="Customer" name="user-type" value="Customer" checked={usertype === "Customer"} onChange={handleUsertype} />
+                                    </Form.Group> 
+                                    <Form.Group className="mb-3" controlId="artisan-option">
+                                        <Form.Check type="radio" label="Artisan" name="user-type" value="Artisan" checked={usertype === "Artisan"} onChange={handleUsertype} />
+                                    </Form.Group> 
+                                </div>
+                            </Form.Group>
+    
+                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}/>
+                            </Form.Group>
+                            <Form.Group className="mb-3" controlId="formBasicPassword2">
+                                <Form.Label>Confirm Password</Form.Label>
+                                <Form.Control type="password" placeholder="confirm Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}/>
+                            </Form.Group>
+    
+                            <div className="alternative">
+                                <div className="form-submit">
+                                    <Form.Group className="mb-3" controlId="formBasicCheckbox">
+                                        <Form.Check type="checkbox" label="Check me out" />
+                                    </Form.Group>
+    
+                                    <Button variant="primary" type="submit">Register</Button>
+                                </div>
+                                <div className="form-submit">
+                                    <p id="form_prompt">Have an account?</p> 
+                                    <Button id="form_btn" onClick={update_form_btn} variant="primary">Log in</Button>
+                                </div>
+                            </div>
+                        </Form>
+                    </div>
+                ) : (
+                    <div>
+                         <h3 className="form-title">Login</h3>
+                        <Form className="my-form" onSubmit={e => submitLogin(e)}>
                         {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
@@ -141,83 +189,31 @@ export default function Signup(){
                             We'll never share your email with anyone else.
                             </Form.Text>
                         </Form.Group>
-
-                        <Form.Group className="mb-3" controlId="formBasicText">
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control type="text" placeholder="Enter username" value={username} onChange={e => setUsername(e.target.value)} />
-                        </Form.Group>
-
-                        <Form.Group className="mb-3" controlId="formBasicRadio">
-                            <Form.Label>Register As:</Form.Label>
-                            <div className="radio-options">
-                                <Form.Group className="mb-3 option-1" controlId="customer-option">
-                                    <Form.Check type="radio" label="Customer" name="user-type" value="Customer" checked={usertype === "Customer"} onChange={handleUsertype} />
-                                </Form.Group> 
-                                <Form.Group className="mb-3" controlId="artisan-option">
-                                    <Form.Check type="radio" label="Artisan" name="user-type" value="Artisan" checked={usertype === "Artisan"} onChange={handleUsertype} />
-                                </Form.Group> 
-                            </div>
-                        </Form.Group>
-
+    
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}/>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="formBasicPassword2">
-                            <Form.Label>Confirm Password</Form.Label>
-                            <Form.Control type="password" placeholder="confirm Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)}/>
-                        </Form.Group>
-
                         <div className="alternative">
                             <div className="form-submit">
                                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                     <Form.Check type="checkbox" label="Check me out" />
                                 </Form.Group>
-
-                                <Button variant="primary" type="submit">Register</Button>
+    
+                                <Button variant="primary" type="submit">Log in</Button>
                             </div>
                             <div className="form-submit">
-                                <p id="form_prompt">Have an account?</p> 
-                                <Button id="form_btn" onClick={update_form_btn} variant="primary">Log in</Button>
+                                <p id="form_prompt">Dont have an account?</p> 
+                                <Button id="form_btn" onClick={update_form_btn} variant="primary">Register</Button>
                             </div>
                         </div>
-                    </Form>
-                </div>
-            ) : (
-                <div>
-                     <h3 className="form-title">Login</h3>
-                    <Form className="my-form" onSubmit={e => submitLogin(e)}>
-                    {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label>Email address</Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
-                        <Form.Text className="text-muted">
-                        We'll never share your email with anyone else.
-                        </Form.Text>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)}/>
-                    </Form.Group>
-                    <div className="alternative">
-                        <div className="form-submit">
-                            <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                <Form.Check type="checkbox" label="Check me out" />
-                            </Form.Group>
-
-                            <Button variant="primary" type="submit">Log in</Button>
-                        </div>
-                        <div className="form-submit">
-                            <p id="form_prompt">Dont have an account?</p> 
-                            <Button id="form_btn" onClick={update_form_btn} variant="primary">Register</Button>
-                        </div>
+                        </Form>
                     </div>
-                    </Form>
-                </div>
-            )
-        }
-        </>
-    )
+                )
+            }
+            </>
+        )
+    
+    }
 
-}
+    }
