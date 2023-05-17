@@ -1,6 +1,7 @@
 from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
+from .permissions import IsAdmin, IsArtisan, IsCustomer
 
 UserModel = get_user_model()
 
@@ -33,3 +34,34 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('email', 'username')
+
+
+class CustomPermissionField(serializers.Field):
+    def to_representation(self, value):
+        # Convert custom permission value to its string representation
+        return str(value)
+    
+    def to_internal_value(self, data):
+        # Convert string representation to custom permission value
+        return data
+
+class UserPermissionsSerializer(serializers.Serializer):
+    permissions = serializers.ListField(child=CustomPermissionField(),)
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        user_permissions = []
+        
+        # Check if 'request' exists in the context
+        request = self.context.get('request')
+        if IsArtisan().has_permission(request, None):
+            user_permissions.append('is_artisan')
+
+        if IsCustomer().has_permission(request, None):
+            user_permissions.append('is_customer')
+
+        if IsAdmin().has_permission(request, None):
+            user_permissions.append('is_admin')
+
+        representation['permissions'] = user_permissions
+        return representation

@@ -2,9 +2,10 @@ from django.contrib.auth import get_user_model, login, logout
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer
+from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, UserPermissionsSerializer
 from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
+from .permissions import IsArtisan, IsCustomer, IsAdmin
 
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny, )
@@ -44,3 +45,26 @@ class UserView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
+    
+class UserPermissionsView(APIView):
+    permission_classes = (permissions.IsAuthenticated, )
+
+    def get(self, request, format=None):
+        user_permissions = list(request.user.get_all_permissions())
+        serializer = UserPermissionsSerializer(data={'permissions': user_permissions}, context={'request': request})
+        serializer.is_valid()
+        return Response(serializer.data)
+    
+
+class ArtisanView(APIView):
+    permission_classes = (permissions.IsAuthenticated, IsArtisan, )
+    authentication_classes = (SessionAuthentication, )
+
+
+class CustomerView(APIView):
+    permission_classes = (permissions.IsAuthenticated, IsCustomer, )
+    authentication_classes = (SessionAuthentication, )
+
+class AdminView(APIView):
+    permission_classes = (permissions.IsAuthenticated, IsAdmin, )
+    authentication_classes = (SessionAuthentication, )

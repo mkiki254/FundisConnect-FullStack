@@ -16,11 +16,27 @@ export default function Navbar(){
 
     const { userDetails } = useContext(AuthContext)
     const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext)
-    const [username, setUsername] = useState('user')
+    const [username, setUsername] = useState('no username')
+    const { activeUser } = useContext(AuthContext)
+    const [permit, setPermit] = useState('no permissions')
 
+    // Getting the permissions from the API
+    useEffect(() => {
+        client.get("/api/permissions").then(
+            res => {
+                const perm = res.data
+                permit && setPermit(perm.permissions[0])
+            }
+        ).catch(
+            function(error){
+                setPermit('no permissions')
+            }
+        )}, [activeUser])
+
+    // Getting the username
     useEffect(() => {
         userDetails && setUsername(userDetails.user.username)
-    })
+    }, [activeUser])
 
     // Capitalizing the first letter of the username
     const usrname = username.charAt(0).toUpperCase() + username.slice(1)
@@ -33,6 +49,8 @@ export default function Navbar(){
             {withCredentials: true}
         ).then(function(res){
             setIsLoggedIn(false)
+            setUsername('no username')
+            setPermit('no permissions')
         })
     }
 
@@ -46,12 +64,15 @@ export default function Navbar(){
                 </div>                
                 <nav>
                 <ul>
-                    {isLoggedIn && <p>Hello, {usrname}</p>} 
+                    {isLoggedIn && <p>Hello, {username}</p>} 
                     {!isLoggedIn && <li><Link to="/" className="links">Home</Link></li>}
                     {!isLoggedIn && <li><Link to="/about" className="links">About</Link></li>}
                     {!isLoggedIn && <li> <Link to="/artisan" className="links">Artisan</Link></li>}                    
                     {isLoggedIn && <li><Link className="links" onClick={submitLogout}>Logout</Link></li>}
                     {!isLoggedIn && <li><Link to="/signup" className="links">Sign Up</Link></li>}
+                    {isLoggedIn && permit.includes('is_artisan') && <li><Link to="/artisan-home" className="links">Artisan Homepage</Link></li>}
+                    {isLoggedIn && permit.includes('is_customer') && <li><Link to="/customer-home" className="links">Customer Homepage</Link></li>}
+                    {isLoggedIn && permit.includes('is_admin') && <li><Link to="/admin-home" className="links">Admin Homepage</Link></li>}
                 </ul>      
                 </nav>
             </header>

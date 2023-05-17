@@ -13,7 +13,7 @@ export default function App(){
     <>
     <div className="base">
       <Router>
-        <Navbar />
+        <Navbar /> 
         <Routes>
           <Route path="/" element={<Home /> } />
           <Route path="/about" element={<About /> } />

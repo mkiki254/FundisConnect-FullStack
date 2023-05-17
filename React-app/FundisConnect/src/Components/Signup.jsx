@@ -18,6 +18,7 @@ const client = axios.create({
 export default function Signup(){
     const { setUserDetails } = useContext(AuthContext)
     const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext)
+    const { setActiveUser } = useContext(AuthContext)
     const [currentUser, setCurrentUser] = useState()
     const [registrationToggle, setRegistrationToggle] = useState(false)
     const [email, setEmail] = useState('')
@@ -35,13 +36,15 @@ export default function Signup(){
                 setIsLoggedIn(true)
                 const usr = res.data
                 setUserDetails(usr)
+                setActiveUser(currentUser)
             }
         ).then(
-            !(isLoggedIn) && setCurrentUser(false)
+            !(isLoggedIn) && setCurrentUser(false) &&  setActiveUser(currentUser)
         ).catch(function(error){
             setCurrentUser(false)
             setIsLoggedIn(false)
             setUserDetails(null)
+            setActiveUser(current)
         })
     }, [currentUser])
 
