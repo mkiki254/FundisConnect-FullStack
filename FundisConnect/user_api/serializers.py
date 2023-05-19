@@ -11,9 +11,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = '__all__'
     def create(self, clean_data):
         user_obj = UserModel.objects.create_user(email=clean_data['email'],
-            username=clean_data['username'], usertype=clean_data['usertype'], password=clean_data['password'])
+            username=clean_data['username'], usertype=clean_data['usertype'], 
+            phone=clean_data['phone'], password=clean_data['password'])
         user_obj.username = clean_data['username']
         user_obj.usertype = clean_data['usertype']
+        user_obj.phone = clean_data['phone']
         user_obj.save()
         return user_obj
 

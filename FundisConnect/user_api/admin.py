@@ -13,7 +13,7 @@ class UserCreationForm(forms.ModelForm):
     
     class Meta:
         model = AppUser
-        fields = ('username', 'email', 'usertype')
+        fields = ('username', 'email', 'usertype', 'phone')
     
     def clean_password2(self):
         #Check that the two entries match
@@ -37,7 +37,7 @@ class UserChangeForm(forms.ModelForm):
     password = ReadOnlyPasswordHashField()
     class Meta:
         model = AppUser
-        fields = ('username', 'email', 'usertype', 'password', 'is_staff', 'is_superuser')
+        fields = ('username', 'email', 'usertype', 'phone', 'password', 'is_staff', 'is_superuser')
 
     def clean_password(self):
         #Regardless of what the user provides, return the initial value
@@ -50,7 +50,7 @@ class AppUserAdmin(BaseUserAdmin):
     add_form = UserCreationForm
 
     #define fields to be displayed in the admin list view
-    list_display = ('username', 'email', 'usertype',)
+    list_display = ('username', 'email', 'usertype', 'phone',)
 
     # define filters to be displayed in the admin list view
     list_filter = ('is_staff', 'is_superuser')
@@ -60,7 +60,7 @@ class AppUserAdmin(BaseUserAdmin):
             'fields': ('email', 'password')}),
             ('Personal info',
              {'fields':
-              ('usertype',)}),
+              ('usertype', 'phone',)}),
               ('Permissions',
                {'fields': ('is_staff', 'is_superuser')}),
     )
@@ -70,7 +70,7 @@ class AppUserAdmin(BaseUserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide', ),
-            'fields': ('username', 'email', 'usertype', 'password1', 'password2', 'is_staff', 'is_superuser'),
+            'fields': ('username', 'email', 'usertype', 'phone', 'password1', 'password2', 'is_staff', 'is_superuser'),
         }
         ),
     )

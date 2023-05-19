@@ -22,7 +22,8 @@ export default function Signup() {
 
     const [registrationToggle, setRegistrationToggle] = useState(false)
     const [email, setEmail] = useState('')
-    const { username, setUsername, password, setPassword, confirmPassword, setConfirmPassword, usertype, setUsertype } = useLogin();
+    const { username, setUsername, usertype, setUsertype, phone, setPhone,
+         password, setPassword, confirmPassword, setConfirmPassword,  } = useLogin();
     const [error, setError] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
     const navigate = useNavigate();
@@ -48,6 +49,7 @@ export default function Signup() {
                     email: email,
                     username: username,
                     usertype: usertype,
+                    phone: phone,
                     password: password
                 }
             ).then(function (res) {
@@ -62,6 +64,7 @@ export default function Signup() {
                     setActiveUser(usr)
                     setEmail("")
                     setUsername("")
+                    setPhone("")
                     setUsertype("")
                     setPassword("")
                     setConfirmPassword("")
@@ -73,8 +76,7 @@ export default function Signup() {
             })
         }
     }
-
-
+    
     function submitLogin(e) {
         e.preventDefault()
         setError(false)
@@ -125,9 +127,14 @@ export default function Signup() {
                                 </Form.Text>
                             </Form.Group>
 
-                            <Form.Group className="mb-3" controlId="formBasicText">
+                            <Form.Group className="mb-3" controlId="formBasicName">
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control type="text" placeholder="Enter username" value={username} onChange={e => setUsername(e.target.value)} />
+                            </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="formBasicPhone">
+                                <Form.Label>Phone</Form.Label>
+                                <Form.Control type="text" placeholder="Enter phone (07..)" value={phone} onChange={e => setPhone(e.target.value)} />
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="formBasicRadio">
