@@ -134,10 +134,10 @@ export default function Signup() {
                                 <Form.Label>Register As:</Form.Label>
                                 <div className="radio-options">
                                     <Form.Group className="mb-3 option-1" controlId="customer-option">
-                                        <Form.Check type="radio" label="Customer" name="user-type" value="Customer" checked={usertype === "Customer"} onChange={handleUsertype} />
+                                        <Form.Check type="radio" label="Customer" name="user-type" value="customer" checked={usertype === "customer"} onChange={handleUsertype} />
                                     </Form.Group>
                                     <Form.Group className="mb-3" controlId="artisan-option">
-                                        <Form.Check type="radio" label="Artisan" name="user-type" value="Artisan" checked={usertype === "Artisan"} onChange={handleUsertype} />
+                                        <Form.Check type="radio" label="Artisan" name="user-type" value="artisan" checked={usertype === "artisan"} onChange={handleUsertype} />
                                     </Form.Group>
                                 </div>
                             </Form.Group>

@@ -14,7 +14,7 @@ export default function Navbar(){
 
     // Capitalizing the first letter of the username
     const usrname = username.charAt(0).toUpperCase() + username.slice(1)
-
+    // console.log(userPermit)
     return (
         <>
         <div>
@@ -25,7 +25,7 @@ export default function Navbar(){
                 </div>                
                 <nav>
                 <ul>
-                    {isLoggedIn && <p>Hello, {username}</p>}
+                    {isLoggedIn && <p>Hello, {usrname}</p>}
                     {!isLoggedIn && <li><Link to="/" className="links">Home</Link></li>}
                     {!isLoggedIn && <li><Link to="/about" className="links">About</Link></li>}
                     {!isLoggedIn && <li> <Link to="/artisan" className="links">Artisan</Link></li>}
