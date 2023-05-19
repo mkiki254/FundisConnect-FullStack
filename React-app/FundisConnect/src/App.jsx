@@ -22,10 +22,10 @@ export default function App() {
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/about" element={<Protected component={About} />} />
-              <Route path="/artisan-home" element={<Protected component={ArtisanHome} />} />
+              <Route path="/about" element={<About /> } />
               <Route path="/artisan" element={<Artisan />} />
               <Route path="/signup" element={<Signup />} />
+              <Route path="/artisan-home" element={<Protected component={ArtisanHome} />} />
               <Route path="/customer-home" element={<Protected component={CustomerHome} />} />
               <Route path="/admin-home" element={<Protected component={AdminHome} />} />
             </Routes>
