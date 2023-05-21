@@ -1,9 +1,13 @@
-.msg-alert, .form-control {
-  width: 50% !important;
+.reg-form {
+  margin: 0 10vw;
 }
-  
-.my-form {
-  margin-left: 30vw;
+
+.login-form {
+  margin: 0 10vw;
+}
+
+.login-form .form-control {
+  width: 50% !important;
 }
 
 .form-title{
@@ -12,8 +16,10 @@
   color: #de7709;
 }
 
-.alternative {
+.centering {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .form-submit{
@@ -25,5 +31,5 @@
 }
 
 .option-1 {
-  margin-right: 30px;
+  margin-right: 10vw;
 }

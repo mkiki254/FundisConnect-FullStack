@@ -1,7 +1,5 @@
 import '../Styles/Signup.css'
-import Button from 'react-bootstrap/Button'
-import Form from 'react-bootstrap/Form'
-import Alert from 'react-bootstrap/Alert';
+import { Button, Form, Alert, Row, Col } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useAuthContext } from './AuthContext';
@@ -117,48 +115,51 @@ export default function Signup() {
                 registrationToggle ? (
                     <div>
                         <h3 className="form-title">Registration</h3>
-                        <Form className="my-form" onSubmit={e => submitRegistration(e)}>
-                            {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
-                            <Form.Group className="mb-3" controlId="formBasicEmail">
-                                <Form.Label>Email address</Form.Label>
-                                <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
-                                <Form.Text className="text-muted">
-                                    We'll never share your email with anyone else.
-                                </Form.Text>
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formBasicName">
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control type="text" placeholder="Enter username" value={username} onChange={e => setUsername(e.target.value)} />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formBasicPhone">
-                                <Form.Label>Phone</Form.Label>
-                                <Form.Control type="text" placeholder="Enter phone (07..)" value={phone} onChange={e => setPhone(e.target.value)} />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formBasicRadio">
-                                <Form.Label>Register As:</Form.Label>
-                                <div className="radio-options">
-                                    <Form.Group className="mb-3 option-1" controlId="customer-option">
-                                        <Form.Check type="radio" label="Customer" name="user-type" value="customer" checked={usertype === "customer"} onChange={handleUsertype} />
+                        <Form className="reg-form" onSubmit={e => submitRegistration(e)}>
+                            <div className="d-flex justify-content-center align-items-center">
+                                {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
+                            </div>
+                            <Row>
+                                <Col>
+                                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                                        <Form.Label>Email address</Form.Label>
+                                        <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
+                                        <Form.Text className="text-muted">
+                                            We'll never share your email with anyone else.
+                                        </Form.Text>
                                     </Form.Group>
-                                    <Form.Group className="mb-3" controlId="artisan-option">
-                                        <Form.Check type="radio" label="Artisan" name="user-type" value="artisan" checked={usertype === "artisan"} onChange={handleUsertype} />
+                                    <Form.Group className="mb-3" controlId="formBasicName">
+                                        <Form.Label>Username</Form.Label>
+                                        <Form.Control type="text" placeholder="Enter username" value={username} onChange={e => setUsername(e.target.value)} />
                                     </Form.Group>
-                                </div>
-                            </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
-                                <Form.Label>Password</Form.Label>
-                                <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
-                            </Form.Group>
-                            <Form.Group className="mb-3" controlId="formBasicPassword2">
-                                <Form.Label>Confirm Password</Form.Label>
-                                <Form.Control type="password" placeholder="confirm Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
-                            </Form.Group>
-
-                            <div className="alternative">
+                                    <Form.Group className="mb-3" controlId="formBasicPhone">
+                                        <Form.Label>Phone</Form.Label>
+                                        <Form.Control type="text" placeholder="Enter phone (07..)" value={phone} onChange={e => setPhone(e.target.value)} />
+                                    </Form.Group>
+                                </Col>
+                                <Col>
+                                <Form.Group className="mb-3" controlId="formBasicRadio">
+                                    <Form.Label>Register As:</Form.Label>
+                                    <div className="radio-options">
+                                        <Form.Group className="mb-3 option-1" controlId="customer-option">
+                                            <Form.Check type="radio" label="Customer" name="user-type" value="customer" checked={usertype === "customer"} onChange={handleUsertype} />
+                                        </Form.Group>
+                                        <Form.Group className="mb-3" controlId="artisan-option">
+                                            <Form.Check type="radio" label="Artisan" name="user-type" value="artisan" checked={usertype === "artisan"} onChange={handleUsertype} />
+                                        </Form.Group>
+                                    </div>
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formBasicPassword">
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
+                                </Form.Group>
+                                <Form.Group className="mb-3" controlId="formBasicPassword2">
+                                    <Form.Label>Confirm Password</Form.Label>
+                                    <Form.Control type="password" placeholder="confirm Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                                </Form.Group>
+                                </Col>
+                            </Row>
+                            <div className="centering">
                                 <div className="form-submit">
                                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                         <Form.Check type="checkbox" label="Check me out" />
@@ -176,21 +177,22 @@ export default function Signup() {
                 ) : (
                     <div>
                         <h3 className="form-title">Login</h3>
-                        <Form className="my-form" onSubmit={e => submitLogin(e)}>
-                            {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
-                            <Form.Group className="mb-3" controlId="formBasicEmail">
+                        <Form className="login-form" onSubmit={e => submitLogin(e)}>
+                            <div className="d-flex justify-content-center align-items-center">
+                                {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
+                            </div>
+                            <Form.Group className="mb-3 centering flex-column" controlId="formBasicEmail">
                                 <Form.Label>Email address</Form.Label>
                                 <Form.Control type="email" placeholder="Enter email" value={email} onChange={e => setEmail(e.target.value)} />
                                 <Form.Text className="text-muted">
                                     We'll never share your email with anyone else.
                                 </Form.Text>
                             </Form.Group>
-
-                            <Form.Group className="mb-3" controlId="formBasicPassword">
+                            <Form.Group className="mb-3 centering flex-column" controlId="formBasicPassword">
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} />
                             </Form.Group>
-                            <div className="alternative">
+                            <div className="centering">
                                 <div className="form-submit">
                                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
                                         <Form.Check type="checkbox" label="Check me out" />
