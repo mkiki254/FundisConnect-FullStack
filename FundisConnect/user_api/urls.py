@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     path('customer', views.CustomerView.as_view(), name='customer'),
     path('permissions', views.UserPermissionsView.as_view(), name='permissions'),
     path('admin', views.AdminView.as_view(), name='admin'),
+    path('artisan/profile/', include('artisans_api.urls')),
 ]
