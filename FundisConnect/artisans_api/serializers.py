@@ -1,9 +1,10 @@
 from artisans_api.models import ArtisanPersonalInfo
-from rest_framework import serializers
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
-class ArtisanPersonalInfoSerializer(serializers.ModelSerializer):
+class ArtisanPersonalInfoSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = ArtisanPersonalInfo
+        geo_field = 'location'
         fields = '__all__'
         
    

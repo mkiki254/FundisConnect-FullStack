@@ -1,11 +1,15 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from .models import ArtisanPersonalInfo
 from .serializers import ArtisanPersonalInfoSerializer
+from user_api.permissions import IsArtisan
+from rest_framework.authentication import SessionAuthentication
 
 
 class ArtisanPersonalInfoListAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated, IsArtisan, )
+    authentication_classes = (SessionAuthentication, )
     def get(self, request):
         artisan_personal_info = ArtisanPersonalInfo.objects.all()
         serializer = ArtisanPersonalInfoSerializer(artisan_personal_info, many=True)
@@ -20,6 +24,8 @@ class ArtisanPersonalInfoListAPIView(APIView):
 
 
 class ArtisanPersonalInfoDetailAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated, IsArtisan, )
+    authentication_classes = (SessionAuthentication, )
     def get_object(self, pk):
         try:
             return ArtisanPersonalInfo.objects.get(pk=pk)

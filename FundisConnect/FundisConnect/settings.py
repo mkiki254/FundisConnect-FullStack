@@ -48,6 +48,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 INSTALLED_APPS = [
     'rest_framework',
+    'rest_framework_gis',
     'corsheaders',
     'user_api.apps.UserApiConfig',
     'artisans_api.apps.ArtisansApiConfig',
