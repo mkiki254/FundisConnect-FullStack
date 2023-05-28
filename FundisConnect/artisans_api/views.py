@@ -5,6 +5,7 @@ from .models import ArtisanPersonalInfo
 from .serializers import ArtisanPersonalInfoSerializer
 from user_api.permissions import IsArtisan
 from rest_framework.authentication import SessionAuthentication
+from django.contrib.auth import get_user
 
 
 class ArtisanPersonalInfoListAPIView(APIView):
@@ -18,7 +19,8 @@ class ArtisanPersonalInfoListAPIView(APIView):
     def post(self, request):
         serializer = ArtisanPersonalInfoSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            user = get_user(request) #Get the logged in user
+            serializer.save(user=user) #Set the foreign key to the logged in user
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

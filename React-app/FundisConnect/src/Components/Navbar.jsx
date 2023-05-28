@@ -6,7 +6,6 @@ import { useAuthContext } from './AuthContext'
 
 export default function Navbar(){
     const { userDetails, isLoggedIn, activeUser, submitLogout, userPermit, username, setUsername } = useAuthContext();
-
     // Getting the username
     useEffect(() => {
         userDetails && setUsername(userDetails.user.username)

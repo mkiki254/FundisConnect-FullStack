@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
 
 
-    // Checking whether user is logged in or not
+    // Checking whether user is logged in or not.
     useEffect(() => {
         client.get("/api/user").then(
             function (res) {

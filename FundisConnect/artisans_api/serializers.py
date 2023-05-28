@@ -6,5 +6,6 @@ class ArtisanPersonalInfoSerializer(GeoFeatureModelSerializer):
         model = ArtisanPersonalInfo
         geo_field = 'location'
         fields = '__all__'
+        read_only_fields = ['user']
         
    
