@@ -1,0 +1,23 @@
+  .update-profile {
+    margin: 0 10vw;
+  }
+  
+  .update-profile .form-control {
+    width: 50% !important;
+  }
+  
+  .form-title{
+    font-size: 36px;
+    text-align: center;
+    color: #de7709;
+  }
+  
+  .centering {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .form-submit{
+    margin: 20px 30px;
+  }

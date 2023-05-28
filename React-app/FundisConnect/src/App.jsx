@@ -11,6 +11,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './Styles/App.css'
 import './Styles/ArtisanHome.css'
 import './Styles/Map.css'
+import './Styles/UpdateProfile.css'
 import { AuthProvider } from './Components/AuthContext'
 import Protected from './Components/Protected'
 
