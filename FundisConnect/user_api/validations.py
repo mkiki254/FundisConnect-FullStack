@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.validators import RegexValidator
 from django.contrib.auth import get_user_model
 
-
 UserModel = get_user_model()
 
 def custom_validation(data):

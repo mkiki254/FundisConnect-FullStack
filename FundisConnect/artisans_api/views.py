@@ -6,6 +6,7 @@ from .serializers import ArtisanPersonalInfoSerializer
 from user_api.permissions import IsArtisan
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth import get_user
+from .validations import profileCustomValidation
 
 
 class ArtisanPersonalInfoListAPIView(APIView):
@@ -16,13 +17,14 @@ class ArtisanPersonalInfoListAPIView(APIView):
         serializer = ArtisanPersonalInfoSerializer(artisan_personal_info, many=True)
         return Response(serializer.data)
     
-    def post(self, request):
-        serializer = ArtisanPersonalInfoSerializer(data=request.data)
+    def post(self, request):       
+        clean_data = profileCustomValidation(request.data)
+        serializer = ArtisanPersonalInfoSerializer(data=clean_data)
         if serializer.is_valid():
-            user = get_user(request) #Get the logged in user
+            user = get_user(request)   #Get the logged in user
             serializer.save(user=user) #Set the foreign key to the logged in user
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class ArtisanPersonalInfoDetailAPIView(APIView):

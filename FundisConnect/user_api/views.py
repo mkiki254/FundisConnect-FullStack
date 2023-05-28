@@ -7,6 +7,7 @@ from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
 from .permissions import IsArtisan, IsCustomer, IsAdmin
 
+
 class UserRegister(APIView):
     permission_classes = (permissions.AllowAny, )
     def post(self, request):

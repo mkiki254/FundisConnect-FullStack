@@ -50,7 +50,7 @@ export default function UpdateProfile(){
                 setLastName("")
                 setSpecialization("")
             }).catch(error => {
-                const msg = error.data.join(", ");
+                const msg = error.response.data.join(", ");
                 setError(true);
                 setErrorMsg(msg);
             })
@@ -64,16 +64,16 @@ export default function UpdateProfile(){
             <div className="d-flex justify-content-center align-items-center">
                 {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
             </div>
-
-            <Map location={location} onLocationChange={handleLocationChange} />
-
+            <div className="d-flex justify-content-center align-items-center">
+                <Map location={location} onLocationChange={handleLocationChange} />
+            </div>
             <Form.Group className="mb-3 centering flex-column" controlId="formBasicFirstName">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control type="text" placeholder="Enter firstname" value={firstName} onChange={e => setFirstName(e.target.value)} />
             </Form.Group>
 
             <Form.Group className="mb-3 centering flex-column" controlId="formBasicLastName">
-                <Form.Label>First Name</Form.Label>
+                <Form.Label>Last Name</Form.Label>
                 <Form.Control type="text" placeholder="Enter lastname" value={lastName} onChange={e => setLastName(e.target.value)} />
             </Form.Group>
 

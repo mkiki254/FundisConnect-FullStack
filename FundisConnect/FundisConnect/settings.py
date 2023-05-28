@@ -102,6 +102,9 @@ WSGI_APPLICATION = 'FundisConnect.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# Using postgis database and geodjango
+# https://raphael-leger.medium.com/django-handle-latitude-and-longitude-54a4bb2f6e3b
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
