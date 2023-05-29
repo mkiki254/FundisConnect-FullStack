@@ -59,7 +59,7 @@ export default function ArtisanProfile(){
                 setSpecialization("")
             }).catch(error => {
                 console.log(error.response)
-                // const msg = error.response.data.join(", ");
+                const msg = error.response.data.join(", ");
                 setError(true);
                 setErrorMsg(msg);
             })
