@@ -4,7 +4,7 @@ from user_api.models import AppUser
 from django.contrib.postgres.fields import ArrayField
 
 class ArtisanPersonalInfo(models.Model):
-    user = models.ForeignKey(AppUser, on_delete=models.CASCADE, limit_choices_to={'usertype': 'artisan'})
+    user = models.OneToOneField(AppUser, on_delete=models.CASCADE, limit_choices_to={'usertype': 'artisan'})
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     # https://hackernoon.com/how-to-build-location-based-app-with-geodjango-bk1i356x

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Form, Alert } from 'react-bootstrap'
 import Map from '../Map';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -11,13 +12,16 @@ const client = axios.create({
     baseURL: "http://127.0.0.1:8000"
 })
 
-export default function UpdateProfile(){
+export default function ArtisanProfile(){
     const [location, setLocation] = useState([-1.292066, 36.821945]);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [specialization, setSpecialization] = useState('');
     const [error, setError] = useState(false)
+    const [success, setSuccess] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
+    const [successMsg, setSuccessMsg] = useState('')
+    const [submitted, setSubmitted] = useState(false)
 
     const handleLocationChange = (newLocation) => {
         setLocation(newLocation);
@@ -30,6 +34,7 @@ export default function UpdateProfile(){
             setErrorMsg("The location has not been selected")
         }else{
             setError(false)
+            setSuccess(false)
             const newFeature = {
                 type: "Feature",
                 geometry: {
@@ -45,24 +50,38 @@ export default function UpdateProfile(){
 
             client.post("/api/artisan/profile/personal-info/",
             newFeature).then(res => {
+                setSuccess(true)
+                setSuccessMsg("Your details have been recorded successfully")
+                setSubmitted(true)
                 setLocation(null)
                 setFirstName("")
                 setLastName("")
                 setSpecialization("")
             }).catch(error => {
-                const msg = error.response.data.join(", ");
+                console.log(error.response)
+                // const msg = error.response.data.join(", ");
                 setError(true);
                 setErrorMsg(msg);
             })
         }
     }
-   
+
+    if(submitted){
+        return(
+            <>
+            <div className="d-flex justify-content-center align-items-center">
+                {success && <Alert variant="success" className="msg-alert">{successMsg}</Alert>}
+            </div>
+            </>
+        )
+    }
     return (
         <>
-        <h3 className="form-title">Update Profile</h3>
+        <h3 className="form-title">Set Profile</h3>
         <Form className="update-profile" onSubmit={e => handleSubmit(e)}>
             <div className="d-flex justify-content-center align-items-center">
                 {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
+                {success && <Alert variant="success" className="msg-alert">{successMsg}</Alert>}
             </div>
             <div className="d-flex justify-content-center align-items-center">
                 <Map location={location} onLocationChange={handleLocationChange} />
