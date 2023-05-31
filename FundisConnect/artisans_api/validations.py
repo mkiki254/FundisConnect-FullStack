@@ -4,7 +4,7 @@ from rest_framework.exceptions import ValidationError
 def profileCustomValidation(data):
     first_name = data["properties"]["first_name"]
     last_name = data["properties"]["last_name"]
-    specialization = data["properties"]["specialization"][0]
+    specialization = data["properties"]["specialization"]
 
     ##
     if first_name == "":

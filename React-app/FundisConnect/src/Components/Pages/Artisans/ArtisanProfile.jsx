@@ -46,7 +46,7 @@ export default function ArtisanProfile(){
                 properties: {
                     first_name: firstName,
                     last_name: lastName,
-                    specialization: [specialization,]
+                    specialization: specialization
                 }
             }
 

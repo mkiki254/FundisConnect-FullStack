@@ -31,41 +31,36 @@ export default function ViewProfile(props){
 
     function handleSubmit(e){
         e.preventDefault()
-        if((location.lng == null) || (location.lat == null)){
-            setError(true)
-            setErrorMsg("The location has not been selected")
-        }else{
-            setError(false)
-            setSuccess(false)
-            const newFeature = {
-                type: "Feature",
-                geometry: {
-                    type: "Point",
-                    coordinates: [location.lng , location.lat ]
-                },
-                properties: {
-                    first_name: firstName,
-                    last_name: lastName,
-                    specialization: [specialization,]
-                }
+        setError(false)
+        setSuccess(false)
+        const newFeature = {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [location.lng , location.lat ]
+            },
+            properties: {
+                first_name: firstName,
+                last_name: lastName,
+                specialization: specialization
             }
-
-            client.put("/api/artisan/profile/personal-info/detail/",
-            newFeature).then(res => {
-                setSuccess(true)
-                setSuccessMsg("Your details have been updated successfully")
-                setSubmitted(true)
-                setLocation(null)
-                setFirstName("")
-                setLastName("")
-                setSpecialization("")
-            }).catch(error => {
-                console.log(error.response)
-                const msg = error.response.data.join(", ");
-                setError(true);
-                setErrorMsg(msg);
-            })
         }
+
+        client.put("/api/artisan/profile/personal-info/detail/",
+        newFeature).then(res => {
+            setSuccess(true)
+            setSuccessMsg("Your details have been updated successfully")
+            setSubmitted(true)
+            setLocation(null)
+            setFirstName("")
+            setLastName("")
+            setSpecialization("")
+        }).catch(error => {
+            console.log(error.response)
+            const msg = error.response.data.join(", ");
+            setError(true);
+            setErrorMsg(msg);
+        })            
     }
 
     function handleEditProfile(){

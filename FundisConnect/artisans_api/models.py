@@ -16,8 +16,7 @@ class ArtisanPersonalInfo(models.Model):
         ('mason', 'mason'),
         ('tiling', 'tiling')
     ]
-    specialization = ArrayField(models.CharField(max_length=50,
-                        choices=SPECIALIZATION_CHOICES, blank=True))
+    specialization = models.CharField(max_length=50, choices=SPECIALIZATION_CHOICES)
     
 #     years_of_experience = models.PositiveIntegerField()
 #     preferred_working_days = models.CharField(max_length=250)
