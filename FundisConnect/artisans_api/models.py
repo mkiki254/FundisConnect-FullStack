@@ -14,7 +14,8 @@ class ArtisanPersonalInfo(models.Model):
         ('electrician', 'electrician'),
         ('carpenter', 'carpenter'),
         ('mason', 'mason'),
-        ('tiling', 'tiling')
+        ('tiling', 'tiling'),
+        ('painter', 'painter')
     ]
     specialization = models.CharField(max_length=50, choices=SPECIALIZATION_CHOICES)
     

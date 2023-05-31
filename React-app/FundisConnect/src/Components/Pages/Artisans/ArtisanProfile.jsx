@@ -22,9 +22,6 @@ export default function ArtisanProfile(){
     const [successMsg, setSuccessMsg] = useState('')
     const [submitted, setSubmitted] = useState(false)
 
-    // const handleLocationChange = (newLocation) => {
-    //     setLocation(newLocation);
-    // };
     function handleLocationChange(newLocation){
         setLocation(newLocation)
     }
