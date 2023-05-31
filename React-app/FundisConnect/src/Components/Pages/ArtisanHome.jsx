@@ -87,7 +87,8 @@ export default function Artisan(){
         {dashboard && <Dashboard />}
         {artisanProfile && <ArtisanProfile />}
         {profileDetails && viewProfile && <ViewProfile 
-        location={artisanData.geometry.coordinates.reverse()}
+        lat={artisanData.geometry.coordinates[1]}
+        lng={artisanData.geometry.coordinates[0]}
         first_name={artisanData.properties.first_name}
         last_name={artisanData.properties.last_name}
         specialization={artisanData.properties.specialization[0]}

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Button, Form, Alert } from 'react-bootstrap'
 import Map from '../Map';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -23,9 +22,12 @@ export default function ArtisanProfile(){
     const [successMsg, setSuccessMsg] = useState('')
     const [submitted, setSubmitted] = useState(false)
 
-    const handleLocationChange = (newLocation) => {
-        setLocation(newLocation);
-    };
+    // const handleLocationChange = (newLocation) => {
+    //     setLocation(newLocation);
+    // };
+    function handleLocationChange(newLocation){
+        setLocation(newLocation)
+    }
 
     function handleSubmit(e){
         e.preventDefault()
