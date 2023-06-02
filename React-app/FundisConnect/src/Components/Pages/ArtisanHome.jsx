@@ -24,6 +24,7 @@ export default function Artisan(){
     const [reports, setReports] = useState(false)
     const [profileDetails, setProfileDetails] = useState()
     const [artisanData, setArtisanData] = useState()
+    const [imageUrl, setImageUrl] = useState()
 
     useEffect(() => {
         client.get("/api/artisan/profile/personal-info/detail/").then(
@@ -31,6 +32,14 @@ export default function Artisan(){
             const dta = res.data
             setArtisanData(dta)
             setProfileDetails(true)
+
+            // Getting the image
+            client.get(dta.properties.profile_picture, {responseType: 'blob'})
+            .then(response => {
+                const imgblob = response.data
+                const imgUrl = URL.createObjectURL(imgblob)
+                setImageUrl(imgUrl)
+            })
            }
         ).catch(error => {
             setProfileDetails(false)
@@ -92,7 +101,7 @@ export default function Artisan(){
         first_name={artisanData.properties.first_name}
         last_name={artisanData.properties.last_name}
         specialization={artisanData.properties.specialization}
-        profile_picture={artisanData.properties.profile_picture}
+        profile_picture={imageUrl}
          />}
         {jobrequests && <JobRequests />}
         {reports && <Reports />}

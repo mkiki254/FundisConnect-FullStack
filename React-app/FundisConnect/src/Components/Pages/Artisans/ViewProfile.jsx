@@ -195,7 +195,8 @@ export default function ViewProfile(props){
         <p>First Name: {props.first_name}</p>
         <p>Last Name: {props.last_name}</p>
         <p>Specialization: {props.specialization}</p>
-        <p>Profile Picture: <img src={props.profile_picture} alt="profile picture"/></p>
+        <p>Profile Picture: </p>
+        <img src={props.profile_picture} alt="profile picture" style={{width:"400px"}} />
         </>
     )
 }
