@@ -7,29 +7,32 @@ from user_api.permissions import IsArtisan
 from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth import get_user
 from .validations import profileCustomValidation
-
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class ArtisanPersonalInfoListAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated, IsArtisan, )
     authentication_classes = (SessionAuthentication, )
+    parser_classes = (MultiPartParser, FormParser)
+
     def get(self, request):
         artisan_personal_info = ArtisanPersonalInfo.objects.all()
         serializer = ArtisanPersonalInfoSerializer(artisan_personal_info, many=True)
         return Response(serializer.data)
     
-    def post(self, request):       
-        clean_data = profileCustomValidation(request.data)
-        serializer = ArtisanPersonalInfoSerializer(data=clean_data)
+    def post(self, request):
+        serializer = ArtisanPersonalInfoSerializer(data=request.data)
         if serializer.is_valid():
             user = get_user(request)   #Get the logged in user
             serializer.save(user=user) #Set the foreign key to the logged in user
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ArtisanPersonalInfoDetailAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated, IsArtisan, )
     authentication_classes = (SessionAuthentication, )
+    parser_classes = (MultiPartParser, FormParser)
+
     # Deriving objects based on logged in user
     def get_object(self, user_id):
         try:

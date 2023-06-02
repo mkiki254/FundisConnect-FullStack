@@ -92,6 +92,7 @@ export default function Artisan(){
         first_name={artisanData.properties.first_name}
         last_name={artisanData.properties.last_name}
         specialization={artisanData.properties.specialization}
+        profile_picture={artisanData.properties.profile_picture}
          />}
         {jobrequests && <JobRequests />}
         {reports && <Reports />}

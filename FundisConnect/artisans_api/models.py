@@ -18,6 +18,7 @@ class ArtisanPersonalInfo(models.Model):
         ('painter', 'painter')
     ]
     specialization = models.CharField(max_length=50, choices=SPECIALIZATION_CHOICES)
+    profile_picture = models.ImageField(upload_to='images/', blank=True, null=True)
     
 #     years_of_experience = models.PositiveIntegerField()
 #     preferred_working_days = models.CharField(max_length=250)
