@@ -182,7 +182,17 @@ export default function ArtisanProfile(){
 
             <Form.Group className="mb-3 centering flex-column" controlId="formBasicSpecialization">
                 <Form.Label>Specialization</Form.Label>
-                <Form.Control type="text" placeholder="Enter specialization" value={data.properties.specialization} onChange={handleSpecializationChange} />
+                <Form.Select 
+                value={data.properties.specialization} 
+                onChange={handleSpecializationChange}>
+                    <option value="">-- Choose --</option>
+                    <option value="plumber">Plumber</option>
+                    <option value="electrician">Electrician</option>
+                    <option value="carpenter">Carpenter</option>
+                    <option value="mason">Mason</option>
+                    <option value="tiling">Tiling</option>
+                    <option value="painter">Painter</option>
+                </Form.Select>
             </Form.Group>
 
             <Form.Group className="mb-3 centering flex-column" controlId="formBasicProfilePicture">

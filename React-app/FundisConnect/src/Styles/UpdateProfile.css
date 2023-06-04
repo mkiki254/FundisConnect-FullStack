@@ -2,7 +2,7 @@
     margin: 0 10vw;
   }
   
-  .update-profile .form-control {
+  .update-profile .form-control, .update-profile .form-select {
     width: 50% !important;
   }
   
