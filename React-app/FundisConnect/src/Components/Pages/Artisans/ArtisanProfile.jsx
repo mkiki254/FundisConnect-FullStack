@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button, Form, Alert } from 'react-bootstrap'
 import Map from '../Map';
 import axios from 'axios';
@@ -12,15 +12,16 @@ const client = axios.create({
 })
 
 export default function ArtisanProfile(){
-    const [locate, setLocate] = useState([-1.292066, 36.821945])
+    const [locate, setLocate] = useState(null)
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
     const [successMsg, setSuccessMsg] = useState('')
     const [submitted, setSubmitted] = useState(false)
+    const [place, setPlace] = useState(null)
 
     const [data, setData] = useState({
-        location: `POINT(${locate[1]} ${locate[0]})`,
+        location: null,
         properties: {
             first_name: "",
             last_name: "",
@@ -59,13 +60,27 @@ export default function ArtisanProfile(){
         }))
     }
 
-    const handleLocationChange = (newLocate) => {
-        setData((prevData) => ({
-            ...prevData,
-            location: `POINT(${newLocate.lng} ${newLocate.lat})`
-        }))
-        setLocate(newLocate)
-    }
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+              const { latitude, longitude } = position.coords;
+              setLocate([latitude, longitude]);
+            });
+          }
+    }, [])
+
+    const handleLocationChange = useCallback(newLocate => {
+        setLocate(newLocate);
+    }, []);
+
+    useEffect(() => {
+        if(locate){
+            setData((prevData) => ({
+                ...prevData,
+                location: `POINT(${locate[1]} ${locate[0]})`
+            }))
+        }
+    }, [locate])
 
     const handleImageChange = (e) => {
         setData((prevData) => ({
@@ -115,9 +130,9 @@ export default function ArtisanProfile(){
         setError(false)
         setSuccess(false)
         // console.log("data:", data)
-        for (const pair of formData.entries()) {
-            console.log(pair[0], pair[1]);
-        }
+        // for (const pair of formData.entries()) {
+        //     console.log(pair[0], pair[1]);
+        // }
 
         client.post("/api/artisan/profile/personal-info/",
         formData, config).then(res => {
@@ -149,9 +164,12 @@ export default function ArtisanProfile(){
                 {error && <Alert variant="danger" className="msg-alert">{errorMsg}</Alert>}
                 {success && <Alert variant="success" className="msg-alert">{successMsg}</Alert>}
             </div>
-            <div className="d-flex justify-content-center align-items-center">
-                <Map location={locate} onLocationChange={handleLocationChange} />
-            </div>
+            <Form.Group className="mb-3 centering flex-column" controlId="formBasicLocation">
+                <Form.Label>Location</Form.Label>
+                <div className="d-flex justify-content-center align-items-center">
+                    <Map location={locate} onLocationChange={handleLocationChange} />
+                </div>                
+            </Form.Group>
             <Form.Group className="mb-3 centering flex-column" controlId="formBasicFirstName">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control type="text" placeholder="Enter firstname" value={data.properties.first_name} onChange={handleFirstNameChange} />

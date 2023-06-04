@@ -1,24 +1,17 @@
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import { Alert } from 'react-bootstrap'
 
 
 const Map = ({ location, onLocationChange }) => {
-    const  MapEvents = () => {
-        useMapEvents({
-            click(e){
-                const { lat, lng } = e.latlng;
-                onLocationChange({ lat, lng })
-            },
-        });
-        return null;
-    }
  
-    return (
+    if(location){
+        return (
         <section className='map-component' >
             {/* --- Add leaflet map container --- */}
             <div className='map'>
             <MapContainer center={location} zoom={13} scrollWheelZoom={true}>
-                <MapEvents />
+                {/* <MapEvents /> */}
                 <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'/>
@@ -26,7 +19,14 @@ const Map = ({ location, onLocationChange }) => {
             </MapContainer>
             </div>
         </section>
-    )    
+        )    
+    }else{
+        return(
+            <>
+            <Alert variant="danger">Please turn on location to set your profile</Alert>
+            </>
+        )
+    }
 }
 
 export default Map;

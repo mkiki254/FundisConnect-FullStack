@@ -1,6 +1,6 @@
 import axios from 'axios'
 import Map from '../Map'
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button, Form, Alert } from 'react-bootstrap'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -60,13 +60,27 @@ export default function ViewProfile(props){
         }))
     }
 
-    const handleLocationChange = (newLocate) => {
-        setData((prevData) => ({
-            ...prevData,
-            location: `POINT(${newLocate.lng} ${newLocate.lat})`
-        }))
-        setLocate(newLocate)
-    }
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+              const { latitude, longitude } = position.coords;
+              setLocate([latitude, longitude]);
+            });
+          }
+    }, [])
+
+    const handleLocationChange = useCallback(newLocate => {
+        setLocate(newLocate);
+    }, []);
+
+    useEffect(() => {
+        if(locate){
+            setData((prevData) => ({
+                ...prevData,
+                location: `POINT(${locate[1]} ${locate[0]})`
+            }))
+        }
+    }, [locate])
 
     const handleImageChange = (e) => {
         setData((prevData) => ({
@@ -116,9 +130,9 @@ export default function ViewProfile(props){
         setError(false)
         setSuccess(false)
         // console.log("data:", data)
-        for (const pair of formData.entries()) {
-            console.log(pair[0], pair[1]);
-        }
+        // for (const pair of formData.entries()) {
+        //     console.log(pair[0], pair[1]);
+        // }
 
         client.put("/api/artisan/profile/personal-info/detail/",
         formData, config).then(res => {

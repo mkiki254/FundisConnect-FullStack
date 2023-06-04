@@ -34,12 +34,14 @@ export default function Artisan(){
             setProfileDetails(true)
 
             // Getting the image
-            client.get(dta.properties.profile_picture, {responseType: 'blob'})
-            .then(response => {
-                const imgblob = response.data
-                const imgUrl = URL.createObjectURL(imgblob)
-                setImageUrl(imgUrl)
-            })
+           if(dta.properties.profile_picture){
+                client.get(dta.properties.profile_picture, {responseType: 'blob'})
+                .then(response => {
+                    const imgblob = response.data
+                    const imgUrl = URL.createObjectURL(imgblob)
+                    setImageUrl(imgUrl)
+                })
+            }
            }
         ).catch(error => {
             setProfileDetails(false)
