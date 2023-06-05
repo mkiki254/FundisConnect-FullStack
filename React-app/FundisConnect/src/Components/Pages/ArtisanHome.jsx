@@ -41,6 +41,8 @@ export default function Artisan(){
                     const imgUrl = URL.createObjectURL(imgblob)
                     setImageUrl(imgUrl)
                 })
+            }else{
+                setImageUrl(null)
             }
            }
         ).catch(error => {

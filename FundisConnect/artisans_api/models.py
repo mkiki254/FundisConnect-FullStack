@@ -1,7 +1,7 @@
 # from django.db import models as djangomodels
 from django.contrib.gis.db import models
 from user_api.models import AppUser
-from django.contrib.postgres.fields import ArrayField
+# from django.contrib.postgres.fields import ArrayField
 
 class ArtisanPersonalInfo(models.Model):
     user = models.OneToOneField(AppUser, on_delete=models.CASCADE, limit_choices_to={'usertype': 'artisan'})

@@ -65,6 +65,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # https://github.com/un1t/django-cleanup
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
