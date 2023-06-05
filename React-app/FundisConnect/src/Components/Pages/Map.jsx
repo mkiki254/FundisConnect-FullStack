@@ -23,7 +23,7 @@ const Map = ({ location, onLocationChange }) => {
     }else{
         return(
             <>
-            <Alert variant="danger">Please turn on location to set your profile</Alert>
+            <Alert variant="danger">Please turn on location to set your profile. You might also be offline</Alert>
             </>
         )
     }

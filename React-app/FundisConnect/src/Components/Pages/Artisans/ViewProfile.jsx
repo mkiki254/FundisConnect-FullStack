@@ -16,7 +16,7 @@ export default function ViewProfile(props){
     const [locate, setLocate] = useState([props.lat, props.lng])
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
-    const [errorMsg, setErrorMsg] = useState('')
+    const [errorMsg, setErrorMsg] = useState({})
     const [successMsg, setSuccessMsg] = useState('')
     const [submitted, setSubmitted] = useState(false)
 
@@ -140,10 +140,17 @@ export default function ViewProfile(props){
                 setSuccessMsg("Your details have been updated successfully")
                 setSubmitted(true)
             }).catch(error => {
-                console.log(error.response)
-                const msg = error.response.data.join(", ");
-                setError(true);
-                setErrorMsg(msg);
+                if(error.response && error.response.data){
+                    const errorResponse = error.response.data
+
+                    const fieldErrors = {}
+                    for(const field in errorResponse){
+                        if(Array.isArray(errorResponse[field])){
+                            fieldErrors[field] = errorResponse[field][0]
+                        }
+                    }
+                    setErrorMsg(fieldErrors)
+                }
             })
     }
 
@@ -172,29 +179,33 @@ export default function ViewProfile(props){
                     <Map location={locate} onLocationChange={handleLocationChange} />
                 </div>
                 <Form.Group className="mb-3 centering flex-column" controlId="formBasicFirstName">
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter firstname" value={data.properties.first_name} onChange={handleFirstNameChange} />
-                </Form.Group>
+                <Form.Label>First Name</Form.Label>
+                <Form.Control type="text" placeholder="Enter firstname" value={data.properties.first_name} onChange={handleFirstNameChange} />
+                {errorMsg.first_name && <span className="error-msg">{errorMsg.first_name}</span>}
+            </Form.Group>
 
-                <Form.Group className="mb-3 centering flex-column" controlId="formBasicLastName">
-                    <Form.Label>Last Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter lastname" value={data.properties.last_name} onChange={handleLastNameChange} />
-                </Form.Group>
+            <Form.Group className="mb-3 centering flex-column" controlId="formBasicLastName">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control type="text" placeholder="Enter lastname" value={data.properties.last_name} onChange={handleLastNameChange} />
+                {errorMsg.last_name && <span className="error-msg">{errorMsg.last_name}</span>}
+            </Form.Group>
 
-                <Form.Group className="mb-3 centering flex-column" controlId="formBasicSpecialization">
-                    <Form.Label>Specialization</Form.Label>
-                    <Form.Select 
-                    value={data.properties.specialization} 
-                    onChange={handleSpecializationChange}>
-                        <option value="">-- Choose --</option>
-                        <option value="plumber">Plumber</option>
-                        <option value="electrician">Electrician</option>
-                        <option value="carpenter">Carpenter</option>
-                        <option value="mason">Mason</option>
-                        <option value="tiling">Tiling</option>
-                        <option value="painter">Painter</option>
-                    </Form.Select>
-                </Form.Group>
+            <Form.Group className="mb-3 centering flex-column" controlId="formBasicSpecialization">
+                <Form.Label>Specialization</Form.Label>
+                <Form.Select 
+                value={data.properties.specialization} 
+                onChange={handleSpecializationChange}>
+                    <option value="">-- Choose --</option>
+                    <option value="plumber">Plumber</option>
+                    <option value="electrician">Electrician</option>
+                    <option value="carpenter">Carpenter</option>
+                    <option value="mason">Mason</option>
+                    <option value="tiling">Tiling</option>
+                    <option value="painter">Painter</option>
+                </Form.Select>
+                {errorMsg.specialization && <span className="error-msg">{errorMsg.specialization}</span>}
+            </Form.Group>
+
 
                 <Form.Group className="mb-3 centering flex-column" controlId="formBasicProfilePicture">
                     <Form.Label>Profile Picture</Form.Label>

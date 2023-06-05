@@ -21,3 +21,7 @@
   .form-submit{
     margin: 20px 30px;
   }
+
+  .error-msg{
+    color: red;
+  }

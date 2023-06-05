@@ -15,7 +15,7 @@ export default function ArtisanProfile(){
     const [locate, setLocate] = useState(null)
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
-    const [errorMsg, setErrorMsg] = useState('')
+    const [errorMsg, setErrorMsg] = useState({})
     const [successMsg, setSuccessMsg] = useState('')
     const [submitted, setSubmitted] = useState(false)
     const [place, setPlace] = useState(null)
@@ -67,7 +67,7 @@ export default function ArtisanProfile(){
               setLocate([latitude, longitude]);
             });
           }
-    }, [])
+    }, [locate])
 
     const handleLocationChange = useCallback(newLocate => {
         setLocate(newLocate);
@@ -140,10 +140,17 @@ export default function ArtisanProfile(){
                 setSuccessMsg("Your details have been recorded successfully")
                 setSubmitted(true)
             }).catch(error => {
-                console.log(error.response)
-                const msg = error.response.data.join(", ");
-                setError(true);
-                setErrorMsg(msg);
+                if(error.response && error.response.data){
+                    const errorResponse = error.response.data
+
+                    const fieldErrors = {}
+                    for(const field in errorResponse){
+                        if(Array.isArray(errorResponse[field])){
+                            fieldErrors[field] = errorResponse[field][0]
+                        }
+                    }
+                    setErrorMsg(fieldErrors)
+                }
             })
     }
 
@@ -173,11 +180,13 @@ export default function ArtisanProfile(){
             <Form.Group className="mb-3 centering flex-column" controlId="formBasicFirstName">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control type="text" placeholder="Enter firstname" value={data.properties.first_name} onChange={handleFirstNameChange} />
+                {errorMsg.first_name && <span className="error-msg">{errorMsg.first_name}</span>}
             </Form.Group>
 
             <Form.Group className="mb-3 centering flex-column" controlId="formBasicLastName">
                 <Form.Label>Last Name</Form.Label>
                 <Form.Control type="text" placeholder="Enter lastname" value={data.properties.last_name} onChange={handleLastNameChange} />
+                {errorMsg.last_name && <span className="error-msg">{errorMsg.last_name}</span>}
             </Form.Group>
 
             <Form.Group className="mb-3 centering flex-column" controlId="formBasicSpecialization">
@@ -193,6 +202,7 @@ export default function ArtisanProfile(){
                     <option value="tiling">Tiling</option>
                     <option value="painter">Painter</option>
                 </Form.Select>
+                {errorMsg.specialization && <span className="error-msg">{errorMsg.specialization}</span>}
             </Form.Group>
 
             <Form.Group className="mb-3 centering flex-column" controlId="formBasicProfilePicture">
