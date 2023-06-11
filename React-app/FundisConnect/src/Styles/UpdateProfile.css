@@ -25,3 +25,12 @@
   .error-msg{
     color: red;
   }
+
+  .prof{
+    text-align: center;
+    margin: 20px;
+  }
+
+  .prof-loc{
+    margin: 20px 0 0 0;
+  }
