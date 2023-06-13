@@ -24,6 +24,8 @@ export default function Signup() {
          password, setPassword, confirmPassword, setConfirmPassword,  } = useLogin();
     const [error, setError] = useState(false)
     const [errorMsg, setErrorMsg] = useState('')
+    const [success, setSuccess] = useState(false)
+    const [successMsg, setSuccessMsg] = useState('')
     const navigate = useNavigate();
     
     function update_form_btn() {
@@ -60,6 +62,8 @@ export default function Signup() {
                 ).then(function (res) {
                     const usr = res.data
                     setActiveUser(usr)
+                    setSuccess(true)
+                    setSuccessMsg("You have registered successfully")
                     setEmail("")
                     setUsername("")
                     setPhone("")
@@ -87,6 +91,8 @@ export default function Signup() {
         ).then(function (res) {
             const usr = res.data;
             setActiveUser(usr);
+            setSuccess(true)
+            setSuccessMsg("You have logged in successfully")
             setEmail("");
             setPassword("");
         }).catch(({ response }) => {
@@ -102,13 +108,32 @@ export default function Signup() {
     }
 
     // Redirecting users after logging
+    // timeout of 2 seconds to allow reading success message
     useEffect(() => {
+        let timeoutId;
+    
         if (isLoggedIn) {
+          timeoutId = setTimeout(() => {
             const rt = getHomeRoute();
             navigate(rt);
+          }, 2000);
         }
-    }, [isLoggedIn, getHomeRoute]);
+    
+        return () => {
+          clearTimeout(timeoutId);
+        };
+      }, [isLoggedIn, getHomeRoute, navigate]);    
 
+
+    if(success){
+        return(
+            <>
+            <div className="d-flex justify-content-center align-items-center">
+                {success && <Alert variant="success" className="msg-alert">{successMsg}</Alert>}
+            </div>
+            </>
+        )
+    }
     return (
         <>
             {

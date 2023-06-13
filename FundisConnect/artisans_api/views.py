@@ -10,7 +10,7 @@ from .validations import profileCustomValidation
 from rest_framework.parsers import MultiPartParser, FormParser
 
 class ArtisanPersonalInfoListAPIView(APIView):
-    permission_classes = (permissions.IsAuthenticated, IsArtisan, )
+    permission_classes = (permissions.IsAuthenticated, )
     authentication_classes = (SessionAuthentication, )
     parser_classes = (MultiPartParser, FormParser)
 
