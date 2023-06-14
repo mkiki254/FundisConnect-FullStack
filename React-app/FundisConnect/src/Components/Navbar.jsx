@@ -28,7 +28,7 @@ export default function Navbar(){
                     {!isLoggedIn && <li><Link to="/" className="links">Home</Link></li>}
                     {!isLoggedIn && <li><Link to="/about" className="links">About</Link></li>}
                     {!isLoggedIn && <li> <Link to="/artisan" className="links">Artisan</Link></li>}
-                    {!isLoggedIn && <li><Link to="/signup" className="links">Sign Up</Link></li>}
+                    {!isLoggedIn && <li><Link to="/signup" className="links">Login</Link></li>}
                     {isLoggedIn && userPermit.includes('is_artisan') && <li><Link to="/artisan-home" className="links">Artisan Home</Link></li>}
                     {isLoggedIn && userPermit.includes('is_customer') && <li><Link to="/customer-home" className="links">Customer Home</Link></li>}
                     {isLoggedIn && userPermit.includes('is_admin') && <li><Link to="/admin-home" className="links">Admin Home</Link></li>}

@@ -226,16 +226,16 @@ export default function ViewProfile(props){
         <div className="prof">
             <h1>My Profile</h1>
             <Button onClick={handleEditProfile}>Edit Profile</Button>
-            <p className='prof-loc'>My Location</p>
+            {props.profile_picture && <p>Profile Picture</p>}
             <div className="d-flex justify-content-center align-items-center">
-                <Map location={[props.lat, props.lng]}/>
+                {props.profile_picture && <img src={props.profile_picture} alt="profile picture" className="prof-card-pic" />}
             </div>
             <p>First Name: {props.first_name}</p>
             <p>Last Name: {props.last_name}</p>
             <p>Specialization: {props.specialization}</p>
-            {props.profile_picture && <p>Profile Picture</p>}
+            <p className='prof-loc'>My Location</p>
             <div className="d-flex justify-content-center align-items-center">
-                {props.profile_picture && <img src={props.profile_picture} alt="profile picture" style={{height:"400px"}} />}
+                <Map location={[props.lat, props.lng]}/>
             </div>
         </div>
         </>
