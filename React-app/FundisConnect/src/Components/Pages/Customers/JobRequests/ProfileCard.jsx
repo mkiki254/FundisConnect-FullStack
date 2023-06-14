@@ -27,8 +27,6 @@ export default function ProfileCard(props){
         }
     }, [])
 
-    console.log(imageUrl)
-
     return(
         <div className="prof-card">
             <img src={imageUrl} alt="profile picture" className="prof-card-pic"/>

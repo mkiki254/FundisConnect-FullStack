@@ -20,7 +20,6 @@ export default function JobRequests(){
            res => {
             const dta = res.data.features
             setArtisanData(dta)
-            console.log(dta)
            }
         ).catch(error => {
             console.log(error)
@@ -31,14 +30,19 @@ export default function JobRequests(){
       setSelectedService(event.target.value);
     };
 
-    // Looping the artisan details to be displayed in the profile card
-    const artisanDataElements = artisanData.map(artisan => (
-        < ProfileCard 
-        profilePic={artisan.properties.profile_picture}
-        firstname = {artisan.properties.first_name}
-        lastname = {artisan.properties.last_name}
-        />
-    ))
+    const artisanDataElements = artisanData.map(artisan => {
+        if(artisan.properties.specialization == selectedService){
+          return(
+            <>
+              < ProfileCard
+                profilePic={artisan.properties.profile_picture}
+                firstname = {artisan.properties.first_name}
+                lastname = {artisan.properties.last_name}
+                />
+            </>
+          )
+        }
+    })
   
     return(
         <>
