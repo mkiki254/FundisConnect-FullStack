@@ -7,6 +7,8 @@ import Signup from './Components/Signup'
 import ArtisanHome from './Components/Pages/ArtisanHome'
 import CustomerHome from './Components/Pages/CustomerHome'
 import AdminHome from './Components/Pages/AdminHome'
+import ViewProfile from './Components/Pages/Customers/JobRequests/ViewProfile'
+import MakeRequest from './Components/Pages/Customers/JobRequests/MakeRequest'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import './Styles/App.css'
 import './Styles/ArtisanHome.css'
@@ -30,6 +32,8 @@ export default function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/artisan-home" element={<Protected component={ArtisanHome} />} />
               <Route path="/customer-home" element={<Protected component={CustomerHome} />} />
+              <Route path="/customer-home/view-profile" element={<Protected component={ViewProfile} />} />
+              <Route path="/customer-home/select-artisan" element={<Protected component={MakeRequest} />} />
               <Route path="/admin-home" element={<Protected component={AdminHome} />} />
             </Routes>
             <Footer />

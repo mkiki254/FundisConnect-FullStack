@@ -19,6 +19,7 @@ export const AuthContext = createContext({
     submitLogout: () => {}, 
     username: 'no username', setUsername: () => {},
     getHomeRoute: () => {},
+    artisanId:null, setArtisanId: () => {},
 })
 
 // Creating a provider component to wrap the app and provide the context
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }) => {
     const [userPermit, setUserPermit] = useState('no permissions')
     const [activeUser, setActiveUser] = useState()
     const [username, setUsername] = useState('no username')
+    const [artisanId, setArtisanId] = useState()
     const navigate = useNavigate();
 
 
@@ -85,8 +87,7 @@ export const AuthProvider = ({ children }) => {
     }
     
     return (
-        <AuthContext.Provider value={{ userDetails, setUserDetails, isLoggedIn, setIsLoggedIn, 
-            activeUser, setActiveUser, userPermit, setUserPermit, submitLogout, username, setUsername, getHomeRoute }}>
+        <AuthContext.Provider value={{ userDetails, setUserDetails, isLoggedIn, setIsLoggedIn, activeUser, setActiveUser, userPermit, setUserPermit, submitLogout, username, setUsername, getHomeRoute, artisanId, setArtisanId }}>
             {children}
         </AuthContext.Provider>
     )

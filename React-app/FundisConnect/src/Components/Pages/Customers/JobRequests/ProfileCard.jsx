@@ -1,6 +1,8 @@
 import { Button } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { useAuthContext } from '../../../AuthContext'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -12,7 +14,9 @@ const client = axios.create({
 
 export default function ProfileCard(props){
     const [imageUrl, setImageUrl] = useState()
-
+    const navigate = useNavigate()
+    const { setArtisanId } = useAuthContext()
+    
     useEffect(() => {
         // Getting the image
         if(props.profilePic){
@@ -27,13 +31,23 @@ export default function ProfileCard(props){
         }
     }, [])
 
+    function handleViewProfile(){
+        navigate("/customer-home/view-profile")
+        setArtisanId(props.id)
+    }
+    
+    function handleSelectArtisan(){
+        navigate("/customer-home/select-artisan")
+        setArtisanId(props.id)
+    }
+
     return(
         <div className="prof-card">
             <img src={imageUrl} alt="profile picture" className="prof-card-pic"/>
             <h2 className="prof-card-name">{props.firstname} {props.lastname}</h2>
             <div className='prof-card-actions'>
-                <Button>View Profile</Button>
-                <Button>Select Artisan</Button>
+                <Button onClick={handleViewProfile}>View Profile</Button>
+                <Button onClick={handleSelectArtisan}>Select Artisan</Button>
             </div>
         </div>
     )

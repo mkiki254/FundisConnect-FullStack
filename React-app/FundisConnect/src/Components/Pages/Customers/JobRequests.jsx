@@ -20,6 +20,7 @@ export default function JobRequests(){
            res => {
             const dta = res.data.features
             setArtisanData(dta)
+            // console.log(dta)
            }
         ).catch(error => {
             console.log(error)
@@ -35,6 +36,8 @@ export default function JobRequests(){
           return(
             <>
               < ProfileCard
+                key = {artisan.id}
+                id = {artisan.id}
                 profilePic={artisan.properties.profile_picture}
                 firstname = {artisan.properties.first_name}
                 lastname = {artisan.properties.last_name}
