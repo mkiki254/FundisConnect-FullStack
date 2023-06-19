@@ -14,6 +14,7 @@ import './Styles/App.css'
 import './Styles/ArtisanHome.css'
 import './Styles/Map.css'
 import './Styles/UpdateProfile.css'
+import './Styles/JobRequests.css'
 import { AuthProvider } from './Components/AuthContext'
 import Protected from './Components/Protected'
 

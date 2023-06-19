@@ -1,0 +1,17 @@
+.request-form{
+    margin: 0 10vw;
+}
+
+.centering {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.request-form .cal {
+    width: 40vw;
+}
+
+.req-btn {
+    margin: 20px 30px;
+}
