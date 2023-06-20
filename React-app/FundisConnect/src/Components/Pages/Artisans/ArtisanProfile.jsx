@@ -113,16 +113,16 @@ export default function ArtisanProfile(){
         }
       
         return formData;
-      };      
+    };      
       
 
     const formData = transformDataToFormData(data)
 
     const config = {
         headers: {
-          'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
         },
-      };
+    };
 
     function handleSubmit(e){
         e.preventDefault()

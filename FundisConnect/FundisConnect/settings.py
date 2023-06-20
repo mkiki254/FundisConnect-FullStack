@@ -34,7 +34,10 @@ SECRET_KEY = 'django-insecure-qjb%06i^jq=y+lb$1^1tvldin#8ue%xh*)n9-hspcr0-zrzf3x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    '9f8a-41-89-10-241.ngrok-free.app'
+]
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
@@ -175,3 +178,11 @@ REST_FRAMEWORK = {
 # Setting the media root
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# SMTP Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'kariukicharles440@gmail.com'
+EMAIL_HOST_PASSWORD = 'gxaxtuivaclsysrb'

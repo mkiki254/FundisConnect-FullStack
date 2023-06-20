@@ -17,3 +17,7 @@ class ArtisanPersonalInfo(models.Model):
     ]
     specialization = models.CharField(max_length=50, choices=SPECIALIZATION_CHOICES)
     profile_picture = models.ImageField(upload_to='images/', blank=True, null=True)
+
+    def __str__(self):
+        return self.last_name
+    

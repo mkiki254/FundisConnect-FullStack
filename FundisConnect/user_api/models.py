@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.utils import timezone
 
 
 
@@ -52,4 +53,11 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.username
     
-    
+
+class PasswordResetToken(models.Model):
+    user = models.ForeignKey(AppUser, on_delete=models.CASCADE)
+    token = models.CharField(max_length=255)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return self.token

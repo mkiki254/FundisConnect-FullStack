@@ -4,6 +4,6 @@ from .models import CustomerJobRequests
 
 @admin.register(CustomerJobRequests)
 class CustomerJobRequestsAdmin(OSMGeoAdmin):
-    list_display = ('user', 'jobtitle', 'jobphotovideo', 'jobdescription', 'schedule', 'address', 'location')
+    list_display = ('id', 'customer', 'selected_artisan', 'job_title', 'job_photo_video', 'job_description', 'schedule', 'address', 'location')
 
 
