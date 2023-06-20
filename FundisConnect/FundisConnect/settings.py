@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'user_api.apps.UserApiConfig',
     'artisans_api.apps.ArtisansApiConfig',
+    'customers_api.apps.CustomersApiConfig',
     'leaflet',
     'django.contrib.gis',
     'django.contrib.admin',

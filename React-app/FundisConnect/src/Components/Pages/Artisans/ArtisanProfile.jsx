@@ -18,7 +18,7 @@ export default function ArtisanProfile(){
     const [errorMsg, setErrorMsg] = useState({})
     const [successMsg, setSuccessMsg] = useState('')
     const [submitted, setSubmitted] = useState(false)
-    const [place, setPlace] = useState(null)
+
 
     const [data, setData] = useState({
         location: null,
