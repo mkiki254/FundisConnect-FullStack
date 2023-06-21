@@ -20,7 +20,6 @@ export default function MakeRequest(){
     const navigate = useNavigate()
     const { artisanId } = useAuthContext()
     const [artisanDataElements, setArtisanDataElements] = useState([])
-    const [date, setDate] = useState(new Date())
     // const locate = [1.2921, 36.8219]
     const [locate, setLocate] = useState(null)
     const [error, setError] = useState(false)
@@ -34,7 +33,7 @@ export default function MakeRequest(){
         properties: {
             job_title: "",
             job_description: "",
-            schedule: "",
+            schedule: new Date().toISOString(),
             address: "",
             selected_artisan: "",
             job_photo_video: null
@@ -77,7 +76,7 @@ export default function MakeRequest(){
             properties: {
                 ...prevData.properties,
                 // schedule: e.target.value
-                schedule: "2023-06-24T09:00:00Z"
+                schedule: e.value.toISOString()
             }
         }))
     }
@@ -131,15 +130,15 @@ export default function MakeRequest(){
         if(locate){
             setData((prevData) => ({
                 ...prevData,
-                // location: `POINT(${locate[1]} ${locate[0]})`
-                location: `POINT(36.8219 1.2921)`
+                location: `POINT(${locate[1]} ${locate[0]})`
+                // location: `POINT(36.8219 1.2921)`
             }))
         }
-        setData((prevData) => ({
-            ...prevData,
-            // location: `POINT(${locate[1]} ${locate[0]})`
-            location: `POINT(36.8219 1.2921)`
-        }))
+        // setData((prevData) => ({
+        //     ...prevData,
+        //     // location: `POINT(${locate[1]} ${locate[0]})`
+        //     location: `POINT(36.8219 1.2921)`
+        // }))
     }, [locate])
 
     const handleJobPhotoVideoChange = (e) => {
@@ -160,9 +159,9 @@ export default function MakeRequest(){
             for (const propKey in properties) {
                 if (propKey === "job_photo_video") {
                 const file = properties[propKey];
-                if (file && file instanceof File){
-                    formData.append(propKey, file);
-                }
+                    if (file && file instanceof File){
+                        formData.append(propKey, file);
+                    }
                 } else {
                 formData.append(propKey, properties[propKey]);
                 }
@@ -259,7 +258,7 @@ export default function MakeRequest(){
                         <Form.Label>Schedule</Form.Label>
                         {/* https://primereact.org/calendar/ */}
                         {/* <Calendar className="cal" value={date} onChange={(e) => setDate(e.value)} /> */}
-                        <Calendar className="cal" value={date} onChange={handleScheduleChange} />
+                        <Calendar className="cal" value={data.properties.schedule} onChange={handleScheduleChange} dateFormat='yy-mm-dd' showTime hourFormat='12' />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicAddress">
                         <Form.Label>Address</Form.Label>
