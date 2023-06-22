@@ -3,7 +3,7 @@ from user_api.models import AppUser
 from artisans_api.models import ArtisanPersonalInfo
 
 class CustomerJobRequests(models.Model):
-     id = models.BigAutoField(primary_key=True)
+     job_request_id = models.BigAutoField(primary_key=True)
      customer = models.ForeignKey(AppUser, on_delete=models.CASCADE, limit_choices_to={'usertype': 'customer'})
      selected_artisan = models.ForeignKey(ArtisanPersonalInfo, on_delete=models.CASCADE)
      job_title = models.CharField(max_length=50)

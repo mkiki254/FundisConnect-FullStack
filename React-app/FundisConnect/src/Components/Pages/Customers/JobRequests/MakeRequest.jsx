@@ -19,8 +19,6 @@ const client = axios.create({
 export default function MakeRequest(){
     const navigate = useNavigate()
     const { artisanId } = useAuthContext()
-    const [artisanDataElements, setArtisanDataElements] = useState([])
-    // const locate = [1.2921, 36.8219]
     const [locate, setLocate] = useState(null)
     const [error, setError] = useState(false)
     const [success, setSuccess] = useState(false)
@@ -80,18 +78,6 @@ export default function MakeRequest(){
             }
         }))
     }
-   
-    useEffect(() => {
-        client.get("/api/artisan/profile/personal-info/").then(
-           res => {
-            const dta = res.data.features
-            setArtisanDataElements(dta)
-            // console.log(dta)
-           }
-        ).catch(error => {
-            console.log(error)
-        })
-    }, [artisanId])
 
     const handleSelectedArtisanChange = (e) => {
         setData((prevData) => ({
@@ -113,15 +99,6 @@ export default function MakeRequest(){
         }))
     }, [artisanId])
 
-    useEffect(() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(position => {
-              const { latitude, longitude } = position.coords;
-              setLocate([latitude, longitude]);
-            });
-          }
-    }, [locate])
-
     const handleLocationChange = useCallback(newLocate => {
         setLocate(newLocate);
     }, []);
@@ -130,15 +107,9 @@ export default function MakeRequest(){
         if(locate){
             setData((prevData) => ({
                 ...prevData,
-                location: `POINT(${locate[1]} ${locate[0]})`
-                // location: `POINT(36.8219 1.2921)`
+                location: `POINT(${locate.x} ${locate.y})`
             }))
         }
-        // setData((prevData) => ({
-        //     ...prevData,
-        //     // location: `POINT(${locate[1]} ${locate[0]})`
-        //     location: `POINT(36.8219 1.2921)`
-        // }))
     }, [locate])
 
     const handleJobPhotoVideoChange = (e) => {
@@ -187,10 +158,10 @@ export default function MakeRequest(){
 
         setError(false)
         setSuccess(false)
-        console.log("data:", data)
-        for (const pair of formData.entries()) {
-            console.log(pair[0], pair[1]);
-        }
+        // console.log("data:", data)
+        // for (const pair of formData.entries()) {
+        //     console.log(pair[0], pair[1]);
+        // }
 
         client.post("/api/customer/jobrequest/",
         formData, config).then(res => {
