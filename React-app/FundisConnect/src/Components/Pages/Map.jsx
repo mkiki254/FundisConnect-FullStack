@@ -57,7 +57,7 @@ const Map = ({ location, onLocationChange }) => {
         return (
             <section className='map-component' >
                 <div className='d-flex justify-content-center align-items-center map-control'>
-                    <Form.Control type='text' placeholder="Search your location" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}></Form.Control>
+                    <Form.Control type='text' placeholder="Search location" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)}></Form.Control>
                     <Button className='map-btn' onClick={handleSearch}>Search</Button>
                 </div>
                 {/* --- Add leaflet map container --- */}

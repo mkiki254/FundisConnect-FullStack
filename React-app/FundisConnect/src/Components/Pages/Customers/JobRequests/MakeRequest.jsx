@@ -229,7 +229,7 @@ export default function MakeRequest(){
                         <Form.Label>Schedule</Form.Label>
                         {/* https://primereact.org/calendar/ */}
                         {/* <Calendar className="cal" value={date} onChange={(e) => setDate(e.value)} /> */}
-                        <Calendar className="cal" value={data.properties.schedule} onChange={handleScheduleChange} dateFormat='yy-mm-dd' showTime hourFormat='12' />
+                        <Calendar className="cal" showIcon value={data.properties.schedule} onChange={handleScheduleChange} dateFormat='yy-mm-dd' showTime hourFormat='12' />
                     </Form.Group>
                     <Form.Group className="mb-3" controlId="formBasicAddress">
                         <Form.Label>Address</Form.Label>
@@ -239,7 +239,7 @@ export default function MakeRequest(){
                 </Col>
                 <Col>
                     <Form.Group className="mb-3" controlId="formBasicLocation">
-                        <Form.Label>Location</Form.Label>
+                        <Form.Label>Job Location</Form.Label>
                         <div>
                             {/* <Map location={locate} onLocationChange={handleLocationChange} /> */}
                             <Map location={locate} onLocationChange={handleLocationChange} />

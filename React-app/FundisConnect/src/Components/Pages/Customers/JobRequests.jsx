@@ -1,7 +1,9 @@
 import { Form, Button } from 'react-bootstrap'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import ProfileCard from './JobRequests/ProfileCard'
+import Map from '../Map'
+// import RouteMap from '../RouteMap'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -11,9 +13,16 @@ const client = axios.create({
     baseURL: "http://127.0.0.1:8000"
 })
 
+// The routing map will be used by the artisan to find their way to the
+// customers place
+
+// The customer side will just need calculating distance between their 
+// job locations and artisans and find the artisans nearest to them.
+
 export default function JobRequests(){
     const [selectedService, setSelectedService] = useState('');
     const [artisanData, setArtisanData] = useState([])
+    const [locate, setLocate] = useState(null)
 
     useEffect(() => {
         client.get("/api/artisan/profile/personal-info/").then(
@@ -46,6 +55,13 @@ export default function JobRequests(){
           )
         }
     })
+
+    const handleLocationChange = useCallback(newLocate => {
+        setLocate(newLocate);
+    }, []);
+
+    console.log(artisanData[9])
+    console.log(locate)
   
     return(
         <>
@@ -63,6 +79,11 @@ export default function JobRequests(){
                 <option value="tiling">Tiling</option>
                 <option value="painter">Painter</option>
             </Form.Select>
+            <Form.Label>Search your Location</Form.Label>
+                        <div>
+                            <Map location={locate} onLocationChange={handleLocationChange} />
+                            {/* <RouteMap /> */}
+                        </div>                
             {artisanDataElements}
         </div>
         </>

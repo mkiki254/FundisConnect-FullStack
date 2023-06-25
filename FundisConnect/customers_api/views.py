@@ -68,4 +68,3 @@ class CustomerJobRequestsDetailAPIView(APIView):
         customer_job_request = self.get_object(customer_id= userId)
         customer_job_request.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
