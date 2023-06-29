@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import ProfileCard from './JobRequests/ProfileCard'
 import Map from '../Map'
-// import RouteMap from '../RouteMap'
+import RouteMap from '../RouteMap'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -23,7 +23,7 @@ export default function JobRequests(){
     const [selectedService, setSelectedService] = useState('');
     const [artisanData, setArtisanData] = useState([])
     const [locate, setLocate] = useState(null)
-
+   
     useEffect(() => {
         client.get("/api/artisan/profile/personal-info/").then(
            res => {
@@ -40,7 +40,15 @@ export default function JobRequests(){
       setSelectedService(event.target.value);
     };
 
-    const artisanDataElements = artisanData.map(artisan => {
+    const handleLocationChange = useCallback(newLocate => {
+        setLocate(newLocate);
+    }, []);
+
+    
+    // console.log(artisanData)
+    // console.log(locate)
+
+    const artisanDataElements = locate && artisanData.map(artisan => {
         if(artisan.properties.specialization == selectedService){
           return(
             <>
@@ -50,22 +58,18 @@ export default function JobRequests(){
                 profilePic={artisan.properties.profile_picture}
                 firstname = {artisan.properties.first_name}
                 lastname = {artisan.properties.last_name}
+                startLatLng = {[locate.x, locate.y]}
+                endLatLng = {artisan.geometry.coordinates}
                 />
             </>
           )
         }
     })
-
-    const handleLocationChange = useCallback(newLocate => {
-        setLocate(newLocate);
-    }, []);
-
-    console.log(artisanData[9])
-    console.log(locate)
   
     return(
         <>
-        <div className="d-flex justify-content-center align-items-center flex-column selectedService">
+        {(!selectedService || !locate) && 
+        (<div className="d-flex justify-content-center align-items-center flex-column selectedService">
             <h1>Make Job Requests</h1>
             <Form.Label>Select Service</Form.Label>
             <Form.Select 
@@ -80,12 +84,16 @@ export default function JobRequests(){
                 <option value="painter">Painter</option>
             </Form.Select>
             <Form.Label>Search your Location</Form.Label>
-                        <div>
-                            <Map location={locate} onLocationChange={handleLocationChange} />
-                            {/* <RouteMap /> */}
-                        </div>                
-            {artisanDataElements}
-        </div>
+            <div>
+                <Map location={locate} onLocationChange={handleLocationChange} />
+                {/* <RouteMap /> */}
+            </div>                
+        </div>)}
+        {selectedService && locate && 
+        (<div className="text-center">
+          <h1>Artisan profiles</h1>
+        </div>)}
+        {artisanDataElements}
         </>
     )
 }

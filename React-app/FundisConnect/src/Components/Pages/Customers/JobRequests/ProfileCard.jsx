@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../../AuthContext'
+import CalculateDistance from '../../CalculateDistance'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -16,6 +17,10 @@ export default function ProfileCard(props){
     const [imageUrl, setImageUrl] = useState()
     const navigate = useNavigate()
     const { setArtisanId } = useAuthContext()
+    const startLatLng = props.startLatLng
+    const endLatLng = props.endLatLng
+    const distance = Math.round(CalculateDistance({startLatLng, endLatLng}))
+    // console.log(distance)
     
     useEffect(() => {
         // Getting the image
@@ -45,6 +50,7 @@ export default function ProfileCard(props){
         <div className="prof-card">
             <img src={imageUrl} alt="profile picture" className="prof-card-pic"/>
             <h2 className="prof-card-name">{props.firstname} {props.lastname}</h2>
+            <p className="prof-card-loc">Location: {distance} kilometres away</p>
             <div className='prof-card-actions'>
                 <Button onClick={handleViewProfile}>View Profile</Button>
                 <Button onClick={handleSelectArtisan}>Select Artisan</Button>

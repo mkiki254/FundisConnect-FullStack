@@ -4,8 +4,10 @@ import 'leaflet/dist/leaflet.css';
 import "../../Styles/Map.css"
 
 export default function RouteMap() {
-  const [startLatLng, setStartLatLng] = useState([-1.2847345, 36.83129903295148]);
-  const [endLatLng, setEndLatLng] = useState([-1.182345731668794, 36.807242]);
+  const [startLatLng, setStartLatLng] = useState([-1.18069485, 36.930846133745185]);
+  //  const [startLatLng, setStartLatLng] = useState([8.681495, 49.41461]);
+  const [endLatLng, setEndLatLng] = useState([-1.4074680499999999, 36.722304098597505]);
+  // const [endLatLng, setEndLatLng] = useState([8.687872,49.420318]);
   const [routeData, setRouteData] = useState(null);
   const [error, setError] = useState(null);
 
@@ -15,7 +17,8 @@ export default function RouteMap() {
 
   async function fetchRoute() {
     const apiKey = '5b3ce3597851110001cf62481d880483044249398760d0ebddfb5f05';
-    const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${startLatLng[1]},${startLatLng[0]}&end=${endLatLng[1]},${endLatLng[0]}`;
+    // const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${startLatLng[1]},${startLatLng[0]}&end=${endLatLng[1]},${endLatLng[0]}`;
+    const url = `http://localhost:8080/ors/v2/directions/driving-car?&start=${startLatLng[1]},${startLatLng[0]}&end=${endLatLng[1]},${endLatLng[0]}`;
 
     try {
       const response = await fetch(url);
