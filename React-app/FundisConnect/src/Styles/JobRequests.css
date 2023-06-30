@@ -76,3 +76,43 @@
     font-size: 17px;
     color: #F3BF99;
   }
+
+  .rec-req {
+    margin: 20px;
+  }
+
+  .rec-req .pg-title {
+    color: #da8446;
+  }
+
+  .rec-req .schedule {
+    margin-left: 8vw;
+  }
+
+  .rec-req .title {
+    margin-left: 20vw;
+  }
+
+  .rec-req .details {
+    margin-left: 20vw;
+  }
+
+  .req {
+    margin: 20px;
+  }
+
+  .req-schedule {
+    /* margin-right: 0vw; */
+    width: 15vw;
+    margin-left: 5vw;
+  }
+
+  .req-title {
+    width: 30vw;
+    margin-left: 13vw;
+  }
+
+  .req-details {
+    width: 10vw;
+    margin-left: 3vw;
+  }

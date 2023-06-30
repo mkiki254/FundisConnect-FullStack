@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
 
     // Checking whether user is logged in or not.
     useEffect(() => {
-        client.get("/api/user").then(
+        client.get("/api/user/").then(
             function (res) {
                 setActiveUser(true)
                 setIsLoggedIn(true)

@@ -36,7 +36,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ('email', 'username')
+        fields = ('user_id', 'email', 'username')
 
 
 class CustomPermissionField(serializers.Field):

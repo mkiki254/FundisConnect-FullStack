@@ -243,7 +243,7 @@ export default function ViewProfile(props){
     return (
         <>
         <div className="prof">
-            <h1>My Profile</h1>
+            <h1 className='prof-title'>My Profile</h1>
             <Button onClick={handleEditProfile}>Edit Profile</Button>
             <div className='prof-page'>
                 <Row>

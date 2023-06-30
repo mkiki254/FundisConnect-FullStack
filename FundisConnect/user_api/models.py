@@ -3,8 +3,6 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils import timezone
 
-
-
 class AppUserManager(BaseUserManager):
     def create_user(self, email, username, usertype, phone, password=None):
         if not email:
