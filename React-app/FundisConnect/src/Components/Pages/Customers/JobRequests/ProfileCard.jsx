@@ -37,13 +37,13 @@ export default function ProfileCard(props){
     }, [])
 
     function handleViewProfile(){
-        navigate("/customer-home/view-profile")
         setArtisanId(props.id)
+        navigate("/customer-home/view-profile")
     }
     
     function handleSelectArtisan(){
-        navigate("/customer-home/select-artisan")
         setArtisanId(props.id)
+        navigate("/customer-home/select-artisan")
     }
 
     return(

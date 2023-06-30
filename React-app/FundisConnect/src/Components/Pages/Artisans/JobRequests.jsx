@@ -54,6 +54,7 @@ export default function JobRequests(){
             // return jobs
             return (
                 <ViewRequests
+                job_id = {jobs.id}
                 schedule = {jobs.properties.schedule} 
                 job_title = {jobs.properties.job_title}        
                  />

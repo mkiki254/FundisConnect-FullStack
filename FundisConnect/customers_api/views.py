@@ -28,43 +28,31 @@ class CustomerJobRequestsListAPIView(APIView):
 
 
 class CustomerJobRequestsDetailAPIView(APIView):
-    permission_classes = (permissions.IsAuthenticated, IsCustomer, )
+    permission_classes = (permissions.IsAuthenticated, )
     authentication_classes = (SessionAuthentication, )
     parser_classes = (MultiPartParser, FormParser)
 
     # Deriving objects based on logged in user
-    def get_object(self, customer_id):
+    def get_object(self, job_request_id):
         try:
-            return CustomerJobRequests.objects.get(customer_id=customer_id)
+            return CustomerJobRequests.objects.get(job_request_id=job_request_id)
         except CustomerJobRequests.DoesNotExist:
             raise status.HTTP_404_NOT_FOUND
     
-    def get(self, request):
-        # Getting id of logged in user
-        user = get_user(request)
-        userId = user.pk
-
-        customer_job_request = self.get_object(customer_id = userId)
+    def get(self, request, job_request_id):
+        customer_job_request = self.get_object(job_request_id)
         serializer = CustomerJobRequestSerializer(customer_job_request)
         return Response(serializer.data)
     
-    def put(self, request):
-        # Getting id of logged in user
-        user = get_user(request)
-        userId = user.pk
-
-        customer_job_request = self.get_object(customer_id= userId)
+    def put(self, request, job_request_id):
+        customer_job_request = self.get_object(job_request_id)
         serializer = CustomerJobRequestSerializer(customer_job_request, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request):
-        # Getting id of logged in user
-        user = get_user(request)
-        userId = user.pk
-
-        customer_job_request = self.get_object(customer_id= userId)
+    def delete(self, request, job_request_id):
+        customer_job_request = self.get_object(job_request_id)
         customer_job_request.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -3,5 +3,5 @@ from .views import CustomerJobRequestsListAPIView, CustomerJobRequestsDetailAPIV
 
 urlpatterns = [
     path('', CustomerJobRequestsListAPIView.as_view(), name="JobInfo"),
-    path('detail/', CustomerJobRequestsDetailAPIView.as_view(), name="JobInfoDetails"),
+    path('<int:job_request_id>/', CustomerJobRequestsDetailAPIView.as_view(), name="JobInfoDetails"),
 ]
