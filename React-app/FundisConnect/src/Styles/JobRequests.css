@@ -116,3 +116,12 @@
     width: 10vw;
     margin-left: 3vw;
   }
+
+  .job-details {
+    margin: 20px;
+  }
+
+  .job-details-title {
+    text-align: center;
+    color: #da8446;
+  }
