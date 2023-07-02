@@ -163,7 +163,7 @@ export default function ViewProfile(props){
 
     // Going back to profiles
     function handleGoBack(){
-        navigate("/artisan-home")
+        setEditProfile(false)
     }
 
     if(editProfile){
