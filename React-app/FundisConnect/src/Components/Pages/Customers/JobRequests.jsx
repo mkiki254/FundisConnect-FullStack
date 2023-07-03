@@ -23,6 +23,7 @@ export default function JobRequests(){
     const [selectedService, setSelectedService] = useState('');
     const [artisanData, setArtisanData] = useState([])
     const [locate, setLocate] = useState(null)
+    const [viewLocation, setViewLocation] = useState(false)
    
     useEffect(() => {
         client.get("/api/artisan/profile/personal-info/").then(
@@ -43,6 +44,22 @@ export default function JobRequests(){
     const handleLocationChange = useCallback(newLocate => {
         setLocate(newLocate);
     }, []);
+
+    // Redirecting users after logging
+    // timeout of 2 seconds to allow reading success message
+    useEffect(() => {
+        let timeoutId;
+    
+        if (selectedService && locate) {
+          timeoutId = setTimeout(() => {
+            setViewLocation(true);
+          }, 3000);
+        }
+    
+        return () => {
+          clearTimeout(timeoutId);
+        };
+      }, [selectedService, locate]);   
 
     
     // console.log(artisanData)
@@ -68,7 +85,7 @@ export default function JobRequests(){
   
     return(
         <>
-        {(!selectedService || !locate) && 
+        {(!selectedService || !locate || !viewLocation) && 
         (<div className="d-flex justify-content-center align-items-center flex-column selectedService">
             <h1>Make Job Requests</h1>
             <Form.Label>Select Service</Form.Label>
@@ -89,7 +106,7 @@ export default function JobRequests(){
                 {/* <RouteMap /> */}
             </div>                
         </div>)}
-        {selectedService && locate && 
+        {selectedService && locate && viewLocation && 
         (<div className="text-center">
           <h1>Artisan profiles</h1>
         </div>)}

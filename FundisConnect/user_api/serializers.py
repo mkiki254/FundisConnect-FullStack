@@ -68,3 +68,11 @@ class UserPermissionsSerializer(serializers.Serializer):
 
         representation['permissions'] = user_permissions
         return representation
+    
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    password = serializers.CharField(min_length=8)

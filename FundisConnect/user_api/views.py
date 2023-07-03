@@ -6,13 +6,13 @@ from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerial
 from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
 from .permissions import IsArtisan, IsCustomer, IsAdmin
-# from django.views.decorators.csrf import csrf_exempt
-# from django.core.mail import send_mail
-# import json
-# from django.contrib.auth.tokens import default_token_generator
-# from django.contrib.auth import get_user_model
-# from django.http import JsonResponse
-# from .models import PasswordResetToken
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
+from .serializers import PasswordResetRequestSerializer
+from .models import PasswordResetToken
+from django.urls import reverse
+from .serializers import PasswordResetConfirmSerializer
 
 
 class UserRegister(APIView):
@@ -78,74 +78,65 @@ class AdminView(APIView):
     authentication_classes = (SessionAuthentication, )
 
 
-# @csrf_exempt
-# def initiate_password_reset(request):
-#     if request.method == 'POST':
-#         body = json.loads(request.body)
-#         email = body.get('email')
-#         User = get_user_model()
+class PasswordResetRequestView(APIView):
+    permission_classes = []
 
-#         # Find the user with the provided email
-#         try:
-#             user = User.objects.get(email=email)
-#         except User.DoesNotExist:
-#             return JsonResponse({'message': 'User not found'}, status=404)
+    def post(self, request):
+        serializer = PasswordResetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            User = get_user_model()
 
-#         # Generate a password reset token
-#         token = default_token_generator.make_token(user)
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return Response({'message': 'User not found'}, status=404)
 
-#         # Build the password reset URL
-#         # reset_url = f'{FRONTEND_URL}/password-reset/confirm/{token}/'
-#         # print(reset_url)
+            token = default_token_generator.make_token(user)
+            PasswordResetToken.objects.create(user=user, token=token)
+            reset_url = request.build_absolute_uri(reverse('password_reset_confirm'))
+            reset_url += f'?token={token}'
 
-#         # Save the password reset token to the database
-#         PasswordResetToken.objects.create(user=user, token=token)
+            # Send the password reset email
+            send_mail(
+                'Password Reset',
+                f'Please click the following link to reset your password: {reset_url}',
+                'sender@example.com',
+                [email],
+                fail_silently=False,
+            )
 
-#         # Send the password reset email
-#         send_mail(
-#             'Password Reset',
-#             f'Please click the following link to reset your password:',
-#             'sender@example.com',
-#             [email],
-#             fail_silently=False,
-#         )
+            return Response({'message': 'Password reset email sent'})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#         return JsonResponse({'message': 'Password reset email sent'})
-    
 
-# @csrf_exempt
-# def confirm_password_reset(request, token):
-#     if request.method == 'POST':
-#         body = json.loads(request.body)
-#         password = body.get('password')
-#         confirm_password = body.get('confirmPassword')
-         
-#         print(password)
+class PasswordResetConfirmView(APIView):
+    permission_classes = []
 
-#         # Validate the password and confirm password
-#         if password != confirm_password:
-#             return JsonResponse({'message': 'Passwords do not match'}, status=400)
+    def post(self, request):
+        serializer = PasswordResetConfirmSerializer(data=request.data)
+        if serializer.is_valid():
+            password = serializer.validated_data['password']
+            token = request.query_params.get('token')
 
-#         # User model
-#         User = get_user_model()
-       
-#         # Find the user with the provided token
-#         try:
-#             password_reset_token = PasswordResetToken.objects.get(token=token)
-#         except User.DoesNotExist:
-#             return JsonResponse({'message': 'Invalid token'}, status=400)
+            if token is None:
+                return Response({'message': 'Token not provided'}, status=400)
 
-#         user = password_reset_token.user
+            try:
+                password_reset_token = PasswordResetToken.objects.get(token=token)
+            except PasswordResetToken.DoesNotExist:
+                return Response({'message': 'Invalid token'}, status=400)
 
-#         # hashed_password = make_password(password)
-#         # print("Password:", hashed_password)
-#         print(password)
-#         # Set the new password
-#         user.set_password(password)
-#         user.save()
+            user = password_reset_token.user
+            user.set_password(password)
+            user.save()
 
-#         return JsonResponse({'message': 'Password reset successfully'})
+            password_reset_token.delete()
 
+            return Response({'message': 'Password reset successful'})
+        else:
+            return Response(serializer.errors, status=400)
 
 
 

@@ -12,6 +12,6 @@ urlpatterns = [
     path('admin', views.AdminView.as_view(), name='admin'),
     path('artisan/profile/', include('artisans_api.urls')),
     path('customer/jobrequest/', include('customers_api.urls')),
-    # path('password-reset/', views.initiate_password_reset, name="password_reset"),
-    # path('password-reset/confirm/<str:token>/', views.confirm_password_reset, name="confirm_password_reset")
+    path('password_reset/', views.PasswordResetRequestView.as_view(), name='initiate_password_reset'),
+    path('password_reset_confirm/', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 ]
