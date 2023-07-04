@@ -11,8 +11,8 @@ from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
 from .serializers import PasswordResetRequestSerializer
 from .models import PasswordResetToken
-from django.urls import reverse
 from .serializers import PasswordResetConfirmSerializer
+from django.conf import settings
 
 
 class UserRegister(APIView):
@@ -77,42 +77,6 @@ class AdminView(APIView):
     permission_classes = (permissions.IsAuthenticated, IsAdmin, )
     authentication_classes = (SessionAuthentication, )
 
-
-# class PasswordResetRequestView(APIView):
-#     permission_classes = []
-
-#     def post(self, request):
-#         serializer = PasswordResetRequestSerializer(data=request.data)
-#         if serializer.is_valid():
-#             email = serializer.validated_data['email']
-#             User = get_user_model()
-
-#             try:
-#                 user = User.objects.get(email=email)
-#             except User.DoesNotExist:
-#                 return Response({'message': 'User not found'}, status=404)
-
-#             token = default_token_generator.make_token(user)
-#             PasswordResetToken.objects.create(user=user, token=token)
-#             reset_url = request.build_absolute_uri(reverse('password_reset_confirm'))
-#             reset_url += f'?token={token}'
-
-#             # Send the password reset email
-#             send_mail(
-#                 'Password Reset',
-#                 f'Please click the following link to reset your password: {reset_url}',
-#                 'sender@example.com',
-#                 [email],
-#                 fail_silently=False,
-#             )
-
-#             return Response({'message': 'Password reset link sent to your email'})
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-from django.conf import settings
-
 class PasswordResetRequestView(APIView):
     permission_classes = []
 
@@ -144,7 +108,6 @@ class PasswordResetRequestView(APIView):
             return Response({'message': 'Password reset link sent to your email'})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 
 class PasswordResetConfirmView(APIView):
