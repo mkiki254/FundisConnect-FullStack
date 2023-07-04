@@ -37,7 +37,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    '9f8a-41-89-10-241.ngrok-free.app'
+    '2ffa-41-89-10-241.ngrok-free.app'
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'user_api.apps.UserApiConfig',
     'artisans_api.apps.ArtisansApiConfig',
     'customers_api.apps.CustomersApiConfig',
+    'payment_api.apps.PaymentApiConfig',
     'leaflet',
     'django.contrib.gis',
     'django.contrib.admin',
@@ -72,6 +73,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # https://github.com/un1t/django-cleanup
     'django_cleanup.apps.CleanupConfig',
+    'django_daraja',
 ]
 
 MIDDLEWARE = [
@@ -189,3 +191,18 @@ EMAIL_HOST_USER = 'fundisconnectke@gmail.com'
 EMAIL_HOST_PASSWORD = 'dirxcorraznucixu'
 
 FRONTEND_URL = 'http://127.0.0.1:3000'
+
+# Mpesa STK Push configuration
+MPESA_ENVIRONMENT = 'sandbox'
+
+MPESA_CONSUMER_KEY = "fkcgwBNItRcQGno2MwA1XeNgqKZ5GKRR"
+
+MPESA_CONSUMER_SECRET = "CPyuyturGhgR6pnL"
+
+MPESA_SHORTCODE = "174379"
+
+MPESA_EXPRESS_SHORTCODE = "174379"
+
+MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+
+LNM_PHONE_NUMBER = "254714456992"

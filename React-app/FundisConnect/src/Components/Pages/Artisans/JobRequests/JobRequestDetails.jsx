@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import "../../../../Styles/JobRequests.css"
 import { useNavigate } from 'react-router-dom'
+import JobAccepted from './JobAccepted'
+import JobDeclined from './JobDeclined'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -20,6 +22,8 @@ export default function JobRequestDetails(){
     const [artisanDetails, setArtisanDetails] = useState()
     const [picVid, setPicVid] = useState(null)
     const navigate = useNavigate()
+    const [acceptedJob, setAcceptedJob] = useState(false)
+    const [declinedJob, setDeclinedJob] = useState(false)
 
     // console.log(jobRequestId)
     useEffect(() => {
@@ -43,8 +47,8 @@ export default function JobRequestDetails(){
         })
     }, [])
 
-    console.log(jobDetails)
-    console.log(picVid)
+    // console.log(jobDetails)
+    // console.log(picVid)
 
     useEffect(() => {
         client.get("/api/artisan/profile/personal-info/detail/").then(
@@ -75,6 +79,30 @@ export default function JobRequestDetails(){
      // Going back to profiles
     function handleGoBack(){
         navigate("/artisan-home")
+    }
+
+    function handleAcceptedJob(){
+        setAcceptedJob(true)
+    }
+
+    function handleDeclinedJob(){
+        setDeclinedJob(true)
+    }
+
+    if(acceptedJob){
+        return(
+            <>
+            <JobAccepted />
+            </>
+        )
+    }
+    
+    if(declinedJob){
+        return(
+            <>
+            <JobDeclined />
+            </>
+        )
     }
 
     return (
@@ -108,8 +136,8 @@ export default function JobRequestDetails(){
             </Row>)}
             <div className="d-flex justify-content-center">
                     <div className="form-submit">
-                        <Button variant="primary">Accept Job</Button>
-                        <Button className="req-btn" variant="primary">Decline Job</Button>
+                        <Button variant="primary" onClick={handleAcceptedJob}>Accept Job</Button>
+                        <Button className="req-btn" variant="primary" onClick={handleDeclinedJob}>Decline Job</Button>
                         <Button className="req-btn" variant="primary" onClick={handleGoBack}>Go Back</Button>
                     </div>
                 </div>
