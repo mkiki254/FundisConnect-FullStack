@@ -78,6 +78,41 @@ class AdminView(APIView):
     authentication_classes = (SessionAuthentication, )
 
 
+# class PasswordResetRequestView(APIView):
+#     permission_classes = []
+
+#     def post(self, request):
+#         serializer = PasswordResetRequestSerializer(data=request.data)
+#         if serializer.is_valid():
+#             email = serializer.validated_data['email']
+#             User = get_user_model()
+
+#             try:
+#                 user = User.objects.get(email=email)
+#             except User.DoesNotExist:
+#                 return Response({'message': 'User not found'}, status=404)
+
+#             token = default_token_generator.make_token(user)
+#             PasswordResetToken.objects.create(user=user, token=token)
+#             reset_url = request.build_absolute_uri(reverse('password_reset_confirm'))
+#             reset_url += f'?token={token}'
+
+#             # Send the password reset email
+#             send_mail(
+#                 'Password Reset',
+#                 f'Please click the following link to reset your password: {reset_url}',
+#                 'sender@example.com',
+#                 [email],
+#                 fail_silently=False,
+#             )
+
+#             return Response({'message': 'Password reset link sent to your email'})
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+from django.conf import settings
+
 class PasswordResetRequestView(APIView):
     permission_classes = []
 
@@ -94,9 +129,9 @@ class PasswordResetRequestView(APIView):
 
             token = default_token_generator.make_token(user)
             PasswordResetToken.objects.create(user=user, token=token)
-            reset_url = request.build_absolute_uri(reverse('password_reset_confirm'))
-            reset_url += f'?token={token}'
-
+            
+            reset_url = f'{settings.FRONTEND_URL}/password-reset-confirm/?token={token}'
+            
             # Send the password reset email
             send_mail(
                 'Password Reset',
@@ -106,9 +141,10 @@ class PasswordResetRequestView(APIView):
                 fail_silently=False,
             )
 
-            return Response({'message': 'Password reset email sent'})
+            return Response({'message': 'Password reset link sent to your email'})
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class PasswordResetConfirmView(APIView):
@@ -118,7 +154,7 @@ class PasswordResetConfirmView(APIView):
         serializer = PasswordResetConfirmSerializer(data=request.data)
         if serializer.is_valid():
             password = serializer.validated_data['password']
-            token = request.query_params.get('token')
+            token = serializer.validated_data['token']
 
             if token is None:
                 return Response({'message': 'Token not provided'}, status=400)

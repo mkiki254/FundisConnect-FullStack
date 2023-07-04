@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useAuthContext } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import useLogin from './useLogin';
+import {Link} from 'react-router-dom'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -219,7 +220,7 @@ export default function Signup() {
                             <div className="centering">
                                 <div className="form-submit">
                                     <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                        <Form.Check type="checkbox" label="Check me out" />
+                                        <Link to='/password-reset-request' className='forg-pass'><p>Forgotten Password?</p></Link>
                                     </Form.Group>
                                     <Button variant="primary" type="submit">Log in</Button>
                                 </div>

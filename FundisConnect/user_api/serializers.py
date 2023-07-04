@@ -76,3 +76,4 @@ class PasswordResetRequestSerializer(serializers.Serializer):
 
 class PasswordResetConfirmSerializer(serializers.Serializer):
     password = serializers.CharField(min_length=8)
+    token = serializers.CharField()

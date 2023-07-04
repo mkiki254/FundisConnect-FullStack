@@ -33,3 +33,19 @@
 .option-1 {
   margin-right: 10vw;
 }
+
+.forg-pass {
+  text-decoration: none;
+}
+
+.pass-resq {
+  margin: 20px;
+}
+
+.pass-resq-title {
+  color: #de7709;
+}
+
+#pass-res-req .form-control {
+  width: 50% !important;
+}
