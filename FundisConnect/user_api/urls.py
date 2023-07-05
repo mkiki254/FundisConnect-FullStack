@@ -14,5 +14,5 @@ urlpatterns = [
     path('admin', views.AdminView.as_view(), name='admin'),
     path('artisan/profile/', include('artisans_api.urls')),
     path('customer/jobrequest/', include('customers_api.urls')),
-    path('payment', include('payment_api.urls'))
+    path('payment/', include('payment_api.urls'))
 ]

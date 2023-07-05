@@ -1,6 +1,7 @@
 from django.urls import path, include
-from . import views
+from .views import PaymentAPIView, PaymentResultsAPIView
 
 urlpatterns = [
-    path('', views.payment_index, name="payment"),
+    path('', PaymentAPIView.as_view(), name="payment"),
+    path('results/', PaymentResultsAPIView.as_view(), name="payment"),
 ]

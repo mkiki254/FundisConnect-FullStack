@@ -17,7 +17,7 @@ export default function ViewRequests(props){
         minute: '2-digit',
         hour12: true
     });
-    console.log(props.job_id)
+    // console.log(props.job_id)
 
     function handleJobDetail(){
         setJobRequestId(props.job_id)
