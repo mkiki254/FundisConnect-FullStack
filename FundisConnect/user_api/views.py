@@ -4,10 +4,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer, UserPermissionsSerializer
 from rest_framework import permissions, status
-from .validations import custom_validation, validate_email, validate_password
+from .validations import custom_validation, validate_email, validate_password, validate_phone
 from .permissions import IsArtisan, IsCustomer, IsAdmin
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, get_user
 from django.core.mail import send_mail
 from .serializers import PasswordResetRequestSerializer
 from .models import PasswordResetToken
@@ -53,6 +53,16 @@ class UserView(APIView):
     def get(self, request):
         serializer = UserSerializer(request.user)
         return Response({'user': serializer.data}, status=status.HTTP_200_OK)
+    
+    def put(self, request):
+        user = get_user(request)
+        clean_data = validate_phone(request.data)
+        serializer = UserSerializer(user, data=clean_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
     
 class UserPermissionsView(APIView):
     permission_classes = (permissions.IsAuthenticated, )

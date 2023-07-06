@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { useAuthContext } from '../../AuthContext'
 import ViewRequests from './JobRequests/ViewRequests'
 import "../../../Styles/jobrequests.css"
 
@@ -16,7 +15,19 @@ const client = axios.create({
 export default function JobRequests(){
     const [jobData, setJobData] = useState([])
     const [allArtisans, setAllArtisans] = useState([])
-    const { userDetails } = useAuthContext()
+    const [artisanId, setArtisanId] = useState()
+    const [acceptedJobs, setAcceptedJobs] = useState([])
+
+    useEffect(() => {
+        client.get("/api/user/").then(
+            res => {
+                const user = res.data.user.user_id
+                setArtisanId(user)
+            }
+        )
+    },[])
+
+    // console.log(artisanId)
 
     useEffect(() => {
         client.get("/api/customer/jobrequest/").then(
@@ -42,15 +53,34 @@ export default function JobRequests(){
         })
     }, [])
 
-    const artisan = allArtisans.filter(artisan => {
-        if(artisan.properties.user == userDetails.user.user_id){
+    useEffect(() => {
+        client.get("/api/payment/results/").then(
+           res => {
+            const dta = res.data
+            setAcceptedJobs(dta)
+           }
+        ).catch(error => {
+            console.log(error)
+        })
+    }, [])
+
+    // console.log(acceptedJobs)
+
+    // Remaining with all the job data elements that have not been accepted by artisans
+    const NewJobDataElements = jobData.filter(job => !acceptedJobs.some(pickedJob => pickedJob.job_request_id === job.id));
+
+    // console.log(jobData)
+    // console.log(NewJobDataElements)
+
+    const artisan = artisanId && allArtisans.filter(artisan => {
+        if(artisan.properties.user == artisanId){
             return artisan
         }
     })
     // console.log(artisan[0])
 
-    const jobDataElements = artisan && jobData.map(jobs => {
-        if(artisan && (jobs.properties.selected_artisan == artisan[0].id)){
+    const jobDataElements = artisanId && artisan && NewJobDataElements && NewJobDataElements.map(jobs => {
+        if(jobs.properties.selected_artisan == artisan[0].id){
             // return jobs
             return (
                 <ViewRequests

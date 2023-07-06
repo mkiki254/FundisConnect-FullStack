@@ -12,3 +12,6 @@ class CustomerJobRequests(models.Model):
      schedule = models.DateTimeField()
      address = models.CharField(max_length=150)
      location = models.PointField()
+
+     def __str__(self):
+        return str(self.job_request_id)

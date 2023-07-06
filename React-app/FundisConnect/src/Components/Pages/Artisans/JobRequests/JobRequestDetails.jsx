@@ -92,7 +92,9 @@ export default function JobRequestDetails(){
     if(acceptedJob){
         return(
             <>
-            <JobAccepted />
+            <JobAccepted 
+            job_id = {jobRequestId}
+            />
             </>
         )
     }

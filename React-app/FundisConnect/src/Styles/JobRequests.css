@@ -129,3 +129,7 @@
   .artisan-payment {
     margin: 20px;
   }
+
+  .mpesa-num {
+    font-weight: 600;
+  }
