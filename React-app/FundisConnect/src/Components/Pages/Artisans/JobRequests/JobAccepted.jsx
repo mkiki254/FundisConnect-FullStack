@@ -1,5 +1,6 @@
 import { Form, Button, Alert } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -13,13 +14,17 @@ const client = axios.create({
 export default function JobAccepted(props){
     const [changedNumber, setChangedNumber] = useState()
     const [paymentResponse, setPaymentResponse] = useState()
+    const [paySuccessResponse, setPaySuccessResponse] = useState()
     const [phoneChangeResponse, setPhoneChangeResponse] = useState()
     const [artisanPhone, setArtisanPhone] = useState()
     const [errorMsg, setErrorMsg] = useState()
     const [artisanNumber, setArtisanNumber] = useState()
     const [isClicked, setIsClicked] = useState(false);
-    const [paymentSuccess, setPaymentSuccess] = useState()
+    const [allAcceptedJobs, setAllAcceptedJobs] = useState([])
+    const [checkResults, setCheckResults] = useState()
+    const [paymentSuccess, setPaymentSuccess] = useState(false)
     const job_id = props.job_id
+    const navigate = useNavigate()
 
     useEffect(() => {
         client.get("/api/user/").then(
@@ -29,6 +34,15 @@ export default function JobAccepted(props){
             }
         )
     },[phoneChangeResponse])
+
+    useEffect(() => {
+        client.get("/api/payment/results/").then(
+            res => {
+                const dta = res.data
+                setAllAcceptedJobs(dta)
+            }
+        )
+    }, [paymentSuccess])
 
     useEffect(() => {
         let timeoutId;
@@ -45,6 +59,57 @@ export default function JobAccepted(props){
         };
     }, [phoneChangeResponse]);
 
+    useEffect(() => {
+        let timeoutId;
+
+        if (checkResults) {
+            timeoutId = setTimeout(() => {
+                setPaymentSuccess(prevSuccess => !prevSuccess)
+            }, 20000);
+        }
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [checkResults]);
+
+    useEffect(() => {
+        const paySuccess = allAcceptedJobs.some(acceptedJob => acceptedJob.job_request_id === job_id) ? true : false
+        setPaySuccessResponse("")
+        if(paymentResponse){
+            if(paySuccess){
+                setPaymentResponse("")
+                setPaySuccessResponse("Your Payment is successful")
+
+                let timeoutId;
+
+                timeoutId = setTimeout(() => {
+                navigate("/artisan-home")
+                }, 3000);
+
+                return () => {
+                    clearTimeout(timeoutId);
+                };
+            }else{
+                let timeoutId;
+
+                timeoutId = setTimeout(() => {
+                    setPaymentResponse("")
+                    setIsClicked(false)
+                    setPaySuccessResponse("Unfortunately, payment not successful")
+                }, 20000)
+
+                return () => {
+                    clearTimeout(timeoutId)
+                }
+            }
+        }
+    }, [allAcceptedJobs])
+
+    // console.log(checkResults)
+
+    // console.log(allAcceptedJobs)
+
     function handleISArtisanNumber(){
         setPaymentResponse("")
         setPhoneChangeResponse("")
@@ -60,6 +125,8 @@ export default function JobAccepted(props){
     function handleMakePayment(){
         setPaymentResponse("")
         setErrorMsg("")
+        setCheckResults("")
+        setPaySuccessResponse("")
         if(artisanPhone){
             client.post(
                 "/api/payment/",{
@@ -71,6 +138,7 @@ export default function JobAccepted(props){
                     console.log(res)
                     setPaymentResponse("Please Enter your pin to complete your transaction")
                     setIsClicked(true)
+                    setCheckResults("yes")
                 }
             ).catch(({response}) => {
                 console.log(response)
@@ -110,6 +178,7 @@ export default function JobAccepted(props){
         <br></br>
         <div className='d-flex justify-content-center align-items-center"'>
             {paymentResponse && <Alert variant='success'>{paymentResponse}</Alert>}
+            {paySuccessResponse && <Alert variant='success'>{paySuccessResponse}</Alert>}
             {phoneChangeResponse && <Alert variant='success'>{phoneChangeResponse}</Alert>}
             {errorMsg && <Alert variant='danger'>{errorMsg}</Alert>}
         </div>
