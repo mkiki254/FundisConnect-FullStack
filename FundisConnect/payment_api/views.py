@@ -35,14 +35,15 @@ class PaymentAPIView(APIView):
             amount = 1
             phone_number = modified_mpesa_number
             transaction_description = "Description"
-            callback_url = 'https://ee85-41-89-10-241.ngrok-free.app/api/payment/results/'
+            callback_url = 'https://a3ea-41-89-10-241.ngrok-free.app/api/payment/results/'
             response = cl.stk_push(phone_number, amount,reference, transaction_description, callback_url)
             # print(response)
             return Response(response)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)            
 
 class PaymentResultsAPIView(APIView):
-    permission_classes = (permissions.AllowAny, )    
+    permission_classes = (permissions.AllowAny, )   
+     
     def get(self, request):
         artisan_payments = ArtisanPayment.objects.all()
         serializer = ArtisanPaymentSerializer(artisan_payments, many=True)

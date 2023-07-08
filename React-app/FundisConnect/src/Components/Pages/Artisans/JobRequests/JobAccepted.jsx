@@ -1,6 +1,7 @@
 import { Form, Button, Alert } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import JobReceipt from './JobReceipt'
 import axios from 'axios'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -23,7 +24,10 @@ export default function JobAccepted(props){
     const [allAcceptedJobs, setAllAcceptedJobs] = useState([])
     const [checkResults, setCheckResults] = useState()
     const [paymentSuccess, setPaymentSuccess] = useState(false)
+    const [customerDetails, setCustomerDetails] = useState(false)
     const job_id = props.job_id
+    const customer = props.customer
+    const job_title = props.job_title
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -84,7 +88,7 @@ export default function JobAccepted(props){
                 let timeoutId;
 
                 timeoutId = setTimeout(() => {
-                navigate("/artisan-home")
+                setCustomerDetails(true)
                 }, 3000);
 
                 return () => {
@@ -97,7 +101,7 @@ export default function JobAccepted(props){
                     setPaymentResponse("")
                     setIsClicked(false)
                     setPaySuccessResponse("Unfortunately, payment not successful")
-                }, 20000)
+                }, 10000)
 
                 return () => {
                     clearTimeout(timeoutId)
@@ -135,16 +139,16 @@ export default function JobAccepted(props){
                 }
             ).then(
                 res => {
-                    console.log(res)
+                    // console.log(res)
                     setPaymentResponse("Please Enter your pin to complete your transaction")
                     setIsClicked(true)
                     setCheckResults("yes")
                 }
             ).catch(({response}) => {
-                console.log(response)
+                // console.log(response)
                 // const msg = response.data[0]
                 setIsClicked(true)
-                setErrorMsg(msg)
+                setErrorMsg("Please Connect to the Internet")
             })
         }
     }
@@ -169,6 +173,18 @@ export default function JobAccepted(props){
         })
     }
 
+    if(!customerDetails){
+        return (
+            <>
+                <JobReceipt 
+                job = {allAcceptedJobs.filter(acceptedJob => acceptedJob.job_request_id === job_id)}
+                job_id = {job_id}
+                customer = {customer}
+                job_title = {job_title}
+                />
+            </>
+        )
+    }
     return (
         <div className='artisan-payment'>
         <h1 className='text-center'>

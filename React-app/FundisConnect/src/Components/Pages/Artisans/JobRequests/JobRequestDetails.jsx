@@ -94,6 +94,8 @@ export default function JobRequestDetails(){
             <>
             <JobAccepted 
             job_id = {jobRequestId}
+            customer = {jobDetails.properties.customer}
+            job_title = {jobDetails.properties.job_title}
             />
             </>
         )

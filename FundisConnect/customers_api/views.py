@@ -2,10 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from .models import CustomerJobRequests
-from .serializers import CustomerJobRequestSerializer
+from .serializers import CustomerJobRequestSerializer, CustomerDetailsSerializer
 from user_api.permissions import IsCustomer
 from rest_framework.authentication import SessionAuthentication
-from django.contrib.auth import get_user
+from django.contrib.auth import get_user, get_user_model
 from rest_framework.parsers import MultiPartParser, FormParser
 
 class CustomerJobRequestsListAPIView(APIView):
@@ -56,3 +56,14 @@ class CustomerJobRequestsDetailAPIView(APIView):
         customer_job_request = self.get_object(job_request_id)
         customer_job_request.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+User = get_user_model()
+class CustomerDetailsAPIView(APIView):
+    permission_classes = (permissions.IsAuthenticated, )
+    authentication_classes = (SessionAuthentication, )
+
+    def get(self, request):
+        customer_details = User.objects.filter(usertype='customer')
+        serializer = CustomerDetailsSerializer(customer_details, many=True)
+        return Response(serializer.data)

@@ -17,6 +17,7 @@ export default function JobRequests(){
     const [allArtisans, setAllArtisans] = useState([])
     const [artisanId, setArtisanId] = useState()
     const [acceptedJobs, setAcceptedJobs] = useState([])
+    const [reading, setReading] = useState(false)
 
     useEffect(() => {
         client.get("/api/user/").then(
@@ -77,9 +78,35 @@ export default function JobRequests(){
             return artisan
         }
     })
+
+    useEffect(() => {
+        let timeoutId;
+        
+        timeoutId = setTimeout(() => {
+            setReading(true)
+        }, 1000);
+        
+
+        return () => {
+            clearTimeout(timeoutId);
+        };
+    }, [artisan]);
     // console.log(artisan[0])
 
-    const jobDataElements = artisanId && artisan && NewJobDataElements && NewJobDataElements.map(jobs => {
+    // const jobDataElements = artisanId && artisan && NewJobDataElements && NewJobDataElements.map(jobs => {
+    //     if(jobs.properties.selected_artisan == artisan[0].id){
+    //         // return jobs
+    //         return (
+    //             <ViewRequests
+    //             job_id = {jobs.id}
+    //             schedule = {jobs.properties.schedule} 
+    //             job_title = {jobs.properties.job_title}        
+    //              />
+    //         )
+    //     }
+    // })
+
+    const jobDataElements = reading && jobData.map(jobs => {
         if(jobs.properties.selected_artisan == artisan[0].id){
             // return jobs
             return (

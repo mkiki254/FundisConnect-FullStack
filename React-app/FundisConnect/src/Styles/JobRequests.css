@@ -133,3 +133,28 @@
   .mpesa-num {
     font-weight: 600;
   }
+
+  .receipt {
+    margin: 20px;
+  }
+
+  .receipt-header {
+    display: flex;
+  }
+
+  .receipt-header .logo {
+    margin-right: 20px;
+    margin-left: 5vw;
+  }
+
+  .receipt-title {
+    background-color: #a491bf;
+    color: #ffffff;
+    padding: 10px;
+  }
+
+  .receipt-body {
+    margin: 20px;
+  }
+
+
