@@ -1,135 +1,106 @@
-import {useState, useEffect } from 'react'
-import { Row, Col, Button } from 'react-bootstrap'
-import axios from 'axios'
+import { Button } from 'react-bootstrap'
+import { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import PrintableReceipt from './PrintableReceipt';
+import { useReactToPrint } from 'react-to-print';
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
+axios.defaults.xsrfCookieName = 'csrftoken';
+axios.defaults.xsrfHeaderName = 'X-CSRFToken';
+axios.defaults.withCredentials = true;
 
 const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
+  baseURL: 'http://127.0.0.1:8000'
+});
+
+const JobReceipt = ({ job_id, customer, job_title }) => {
+  const [allAcceptedJobs, setAllAcceptedJobs] = useState([]);
+  const [paymentDetails, setPaymentDetails] = useState([]);
+  const [reading, setReading] = useState(false);
+  const [customerData, setCustomerData] = useState([]);
+  const [customerDetails, setCustomerDetails] = useState([]);
 
 
-export default function JobReceipt(props){
-    const [allAcceptedJobs, setAllAcceptedJobs] = useState([])
-    const [paymentDetails, setPaymentDetails] = useState([])
-    const [reading, setReading] = useState(false)
-    const [customerData, setCustomerData] = useState([])
-    const [customerDetails, setCustomerDetails] = useState([])
-    const job_id = props.job_id
-    const customer_id = props.customer
-    const job_title = props.job_title
+  const componentRef = useRef();
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+    removeAfterPrint: true,
+    print: async (printIframe) => {
+      const document = printIframe.contentDocument;
+      if (document) {
+        const html = document.getElementsByTagName("html")[0];
 
-    useEffect(() => {
-        client.get("/api/payment/results/").then(
-            res => {
-                const dta = res.data
-                setAllAcceptedJobs(dta)
-            }
-        )
-    }, [])
+        try {
+          const canvas = await html2canvas(html);
+          const imgData = canvas.toDataURL("image/png");
+          const pdf = new jsPDF();
+          const imgProps = pdf.getImageProperties(imgData);
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    useEffect(() => {
-        client.get("/api/customer/jobrequest/customer-details/").then(
-            res => {
-                const dta = res.data
-                setCustomerData(dta)
-            }
-        )
-    }, [])
-    
-    // console.log(customerData)
+          pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+          pdf.save("FundisConnectReceipt.pdf");
+        } catch (error) {
+          console.log("Error generating PDF:", error);
+        }
+      }
+    },
+  });
 
-    useEffect(() => {
-        let timeoutId;
-        
-        timeoutId = setTimeout(() => {
-            setReading(prevRead => !prevRead)
-        }, 1000);
-        
 
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [allAcceptedJobs && customerData]);
+  useEffect(() => {
+    client.get('/api/payment/results/').then((res) => {
+      const dta = res.data;
+      setAllAcceptedJobs(dta);
+    });
+  }, []);
 
-    
-    useEffect(() => {
-        const job = allAcceptedJobs.filter(acceptedJob => acceptedJob.job_request_id === job_id)
-        setPaymentDetails(job)
-        const cust = customerData.filter(client => client.user_id === customer_id)
-        setCustomerDetails(cust)
-    }, [reading])
+  useEffect(() => {
+    client.get('/api/customer/jobrequest/customer-details/').then((res) => {
+      const dta = res.data;
+      setCustomerData(dta);
+    });
+  }, []);
 
-    // console.log(customer)
-    // console.log(customerDetails)
+  useEffect(() => {
+    let timeoutId;
 
-    if(paymentDetails.length > 0){
-        return (
-        <div className="receipt">
-            <div className="receipt-header">
-                <div className="logo">
-                    <h2>FundisConnect</h2>
-                    <p>An artisan just a click away</p>
-                </div>
-                <div className="receipt-title">     
-                    <h1>Customer Connection Payment Receipt</h1>
-                </div> 
-            </div>
-            <div className='receipt-body'>
-                <Row>
-                    <Col>
-                        <h3 className="pay-sect">Payment Details</h3>
-                        <div>
-                            <Row>
-                                <Col className='first-col'>
-                                    <p>Receipt Number</p>
-                                    <h5>{paymentDetails[0].transaction_code}</h5>
-                                    <p>Mpesa Number</p>
-                                    <h5>{paymentDetails[0].artisan_number}</h5>
-                                </Col>
-                                <Col>
-                                    <p>Amount Paid</p>
-                                    <h5>Ksh {paymentDetails[0].amount_paid}</h5>
-                                    <p>Transaction Date</p>
-                                    <h5>{ new Date(paymentDetails[0].transaction_date).toLocaleString('en-ke', {year: 'numeric', month: '2-digit', day: '2-digit', hour: 'numeric', minute: '2-digit', hour12: true})}</h5>
-                                </Col>
-                            </Row>
-                        </div>
-                    </Col>
-                    <Col>
-                        <h3 className="cust-sect">Customer Details</h3>
-                        <div>
-                            <Row>
-                                <Col className='second-col'>
-                                    <p>Name</p>
-                                    <h5>{customerDetails[0].username}</h5>
-                                    <p>Email</p>
-                                    <h5>{customerDetails[0].email}</h5>
-                                </Col>
-                                <Col>
-                                    <p>Phone Number</p>
-                                    <h5>{customerDetails[0].phone}</h5>
-                                    <p>Job Title</p>
-                                    <h5>{job_title}</h5>
-                                </Col>
-                            </Row>
-                        </div>
-                    </Col>
-                </Row>
-            </div>
-            <div className='text-center'>
-                <Button>Download Receipt</Button>
-            </div>
+    timeoutId = setTimeout(() => {
+      setReading((prevRead) => !prevRead);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [allAcceptedJobs && customerData]);
+
+  useEffect(() => {
+    const job = allAcceptedJobs.filter((acceptedJob) => acceptedJob.job_request_id === job_id);
+    setPaymentDetails(job);
+    const cust = customerData.filter((client) => client.user_id === customer);
+    setCustomerDetails(cust);
+  }, [reading]);
+
+  if (paymentDetails.length > 0) {
+    return (
+        <div>           
+            <Button onClick={handlePrint}>Download Receipt</Button>          
+            <PrintableReceipt 
+            paymentDetails={paymentDetails} 
+            customerDetails={customerDetails} 
+            jobTitle={job_title}
+            ref={componentRef}
+            />
         </div>
-        )
-    }else{
-        return(
-            <>
-            <h2>Loading ...</h2>
-            </>
-        )
-    }
-    
-}
+    )
+  } else {
+    return (
+      <>
+        <h2>Loading ...</h2>
+      </>
+    );
+  }
+};
+
+export default JobReceipt;
