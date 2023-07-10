@@ -123,7 +123,7 @@ export default function JobRequests(){
 
     return (
         <div className="rec-req">
-            <h1 className='text-center pg-title'>View Job Requests</h1>
+            <h1 className='text-center pg-title'>View Accepted Jobs</h1>
             <div className='d-flex'>
                 <h4 className="schedule">Scheduled</h4>
                 <h4 className="title">Job Title</h4>
