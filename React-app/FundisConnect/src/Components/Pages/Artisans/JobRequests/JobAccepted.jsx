@@ -173,7 +173,7 @@ export default function JobAccepted(props){
         })
     }
 
-    if(!customerDetails){
+    if(customerDetails){
         return (
             <>
                 <JobReceipt 

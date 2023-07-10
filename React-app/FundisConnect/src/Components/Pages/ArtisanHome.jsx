@@ -4,7 +4,7 @@ import Dashboard from './Artisans/Dashboard'
 import ArtisanProfile from './Artisans/ArtisanProfile'
 import ViewProfile from './Artisans/ViewProfile'
 import JobRequests from './Artisans/JobRequests'
-import Reports from './Artisans/Reports'
+import AcceptedJobs from './Artisans/AcceptedJobs'
 import axios from 'axios'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -21,7 +21,7 @@ export default function Artisan(){
     const [artisanProfile, setArtisanProfile] = useState(false)
     const [viewProfile, setViewProfile] = useState(false)
     const [jobrequests, setJobrequests] = useState(false)
-    const [reports, setReports] = useState(false)
+    const [acceptedJobs, setAcceptedJobs] = useState(false)
     const [profileDetails, setProfileDetails] = useState()
     const [artisanData, setArtisanData] = useState()
     const [imageUrl, setImageUrl] = useState()
@@ -54,7 +54,7 @@ export default function Artisan(){
         setDashboard(true)
         setArtisanProfile(false)
         setJobrequests(false)
-        setReports(false)
+        setAcceptedJobs(false)
         setViewProfile(false)
     }
 
@@ -62,7 +62,7 @@ export default function Artisan(){
         setDashboard(false)
         setArtisanProfile(true)
         setJobrequests(false)
-        setReports(false)
+        setAcceptedJobs(false)
         setViewProfile(false)
     }
 
@@ -70,7 +70,7 @@ export default function Artisan(){
         setDashboard(false)
         setArtisanProfile(false)
         setJobrequests(false)
-        setReports(false)
+        setAcceptedJobs(false)
         setViewProfile(true)
     }
 
@@ -78,15 +78,15 @@ export default function Artisan(){
         setDashboard(false)
         setArtisanProfile(false)
         setJobrequests(true)
-        setReports(false)
+        setAcceptedJobs(false)
         setViewProfile(false)
     }
 
-    function handleReports(){
+    function handleAcceptedJobs(){
         setDashboard(false)
         setArtisanProfile(false)
         setJobrequests(false)
-        setReports(true)
+        setAcceptedJobs(true)
         setViewProfile(false)
     }
 
@@ -96,7 +96,7 @@ export default function Artisan(){
         {!profileDetails && <Button className='nav-button' onClick={handleArtisanProfile}>Set Profile</Button>}
         {profileDetails && <Button className='nav-button' onClick={handleViewProfile}>View Profile</Button>}
         <Button className='nav-button' onClick={handleJobrequests}>Job Requests</Button>
-        <Button className='nav-button' onClick={handleReports}>Reports</Button>
+        <Button className='nav-button' onClick={handleAcceptedJobs}>AcceptedJobs</Button>
         {dashboard && <Dashboard />}
         {artisanProfile && <ArtisanProfile />}
         {profileDetails && viewProfile && <ViewProfile 
@@ -108,7 +108,7 @@ export default function Artisan(){
         profile_picture={imageUrl}
          />}
         {jobrequests && <JobRequests />}
-        {reports && <Reports />}
+        {acceptedJobs && <AcceptedJobs />}
         </>
     )
 }

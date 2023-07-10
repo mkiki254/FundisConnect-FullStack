@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import ViewRequests from './JobRequests/ViewRequests'
+import ViewAccepted from './AcceptedJobs/ViewAccepted'
 import "../../../Styles/jobrequests.css"
 
 axios.defaults.xsrfCookieName = 'csrftoken'
@@ -67,8 +67,8 @@ export default function JobRequests(){
 
     // console.log(acceptedJobs)
 
-    // Remaining with all the job data elements that have not been accepted by artisans
-    const NewJobDataElements = jobData.filter(job => !acceptedJobs.some(pickedJob => pickedJob.job_request_id === job.id));
+    // Remaining with all the job data elements that have been accepted by artisans
+    const NewJobDataElements = jobData.filter(job => acceptedJobs.some(pickedJob => pickedJob.job_request_id === job.id));
 
     // console.log(jobData)
     // console.log(NewJobDataElements)
@@ -97,7 +97,7 @@ export default function JobRequests(){
         if(jobs.properties.selected_artisan == artisan[0].id){
             // return jobs
             return (
-                <ViewRequests
+                <ViewAccepted
                 job_id = {jobs.id}
                 schedule = {jobs.properties.schedule} 
                 job_title = {jobs.properties.job_title}        

@@ -10,6 +10,7 @@ import AdminHome from './Components/Pages/AdminHome'
 import ViewProfile from './Components/Pages/Customers/JobRequests/ViewProfile'
 import MakeRequest from './Components/Pages/Customers/JobRequests/MakeRequest'
 import JobRequestDetails from './Components/Pages/Artisans/JobRequests/JobRequestDetails'
+import AcceptedJobDetails from './Components/Pages/Artisans/AcceptedJobs/AcceptedJobDetails'
 import PasswordResetRequest from './Components/PasswordResetRequest'
 import PasswordResetConfirm from './Components/PasswordResetConfirm'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
@@ -38,6 +39,7 @@ export default function App() {
               <Route path="/password-reset-confirm" element={<PasswordResetConfirm />} />
               <Route path="/artisan-home" element={<Protected component={ArtisanHome} />} />
               <Route path="/artisan-home/job-detail" element={<Protected component={JobRequestDetails} />} />
+              <Route path="/artisan-home/accepted-job" element={<Protected component={AcceptedJobDetails} />} />
               <Route path="/customer-home" element={<Protected component={CustomerHome} />} />
               <Route path="/customer-home/view-profile" element={<Protected component={ViewProfile} />} />
               <Route path="/customer-home/select-artisan" element={<Protected component={MakeRequest} />} />
