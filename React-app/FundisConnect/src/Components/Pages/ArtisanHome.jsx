@@ -96,7 +96,7 @@ export default function Artisan(){
         {!profileDetails && <Button className='nav-button' onClick={handleArtisanProfile}>Set Profile</Button>}
         {profileDetails && <Button className='nav-button' onClick={handleViewProfile}>View Profile</Button>}
         <Button className='nav-button' onClick={handleJobrequests}>Job Requests</Button>
-        <Button className='nav-button' onClick={handleAcceptedJobs}>AcceptedJobs</Button>
+        <Button className='nav-button' onClick={handleAcceptedJobs}>Accepted Jobs</Button>
         {dashboard && <Dashboard />}
         {artisanProfile && <ArtisanProfile />}
         {profileDetails && viewProfile && <ViewProfile 

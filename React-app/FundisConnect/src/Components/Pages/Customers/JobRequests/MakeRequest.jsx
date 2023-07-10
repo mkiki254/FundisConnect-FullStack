@@ -192,6 +192,21 @@ export default function MakeRequest(){
     // console.log(artisanId)
     // console.log(date)
 
+    // Redirecting to customer home
+    useEffect(() => {
+        let timeoutId;
+    
+        if (submitted) {
+          timeoutId = setTimeout(() => {
+            navigate("/customer-home");
+          }, 3000);
+        }
+    
+        return () => {
+          clearTimeout(timeoutId);
+        };
+      }, [submitted]);
+
     if(submitted){
         return(
             <>
