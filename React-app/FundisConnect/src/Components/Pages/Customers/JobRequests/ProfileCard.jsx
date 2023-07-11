@@ -36,10 +36,10 @@ export default function ProfileCard(props){
         }
     }, [])
 
-    function handleViewProfile(){
-        setArtisanId(props.id)
-        navigate("/customer-home/view-profile")
-    }
+    // function handleViewProfile(){
+    //     setArtisanId(props.id)
+    //     navigate("/customer-home/view-profile")
+    // }
     
     function handleSelectArtisan(){
         setArtisanId(props.id)
@@ -52,7 +52,7 @@ export default function ProfileCard(props){
             <h2 className="prof-card-name">{props.firstname} {props.lastname}</h2>
             <p className="prof-card-loc">Location: {distance} kilometres away</p>
             <div className='prof-card-actions'>
-                <Button onClick={handleViewProfile}>View Profile</Button>
+                {/* <Button onClick={handleViewProfile}>View Profile</Button> */}
                 <Button onClick={handleSelectArtisan}>Select Artisan</Button>
             </div>
         </div>

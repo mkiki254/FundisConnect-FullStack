@@ -70,6 +70,9 @@ export default function JobRequests(){
     // Remaining with all the job data elements that have been accepted by artisans
     const NewJobDataElements = jobData.filter(job => acceptedJobs.some(pickedJob => pickedJob.job_request_id === job.id));
 
+    const reversedJobDataElements = [...NewJobDataElements].reverse()
+
+
     // console.log(jobData)
     // console.log(NewJobDataElements)
 
@@ -93,7 +96,7 @@ export default function JobRequests(){
     }, [artisan]);
     // console.log(artisan[0])
 
-    const jobDataElements = reading && artisanId && artisan && NewJobDataElements && NewJobDataElements.map(jobs => {
+    const jobDataElements = reading && artisanId && artisan && reversedJobDataElements && reversedJobDataElements.map(jobs => {
         if(jobs.properties.selected_artisan == artisan[0].id){
             // return jobs
             return (
