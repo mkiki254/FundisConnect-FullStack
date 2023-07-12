@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 
-const CalculateDistance = ({ startLatLng, endLatLng }) => {
+const CalculateDistance = ({ startLatLng, endLatLng, locate }) => {
     const [routeData, setRouteData] = useState(null);
-    const [error, setError] = useState(null);
 
     // console.log(startLatLng, endLatLng)
   
     useEffect(() => {
       fetchRoute();
-    }, []);
+    }, [locate]);
   
     async function fetchRoute() {
       const apiKey = '5b3ce3597851110001cf62481d880483044249398760d0ebddfb5f05';

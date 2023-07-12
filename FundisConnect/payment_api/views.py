@@ -26,7 +26,7 @@ class PaymentAPIView(APIView):
         serializer = MpesaNumberSerializer(data=clean_data)
         if serializer.is_valid():
             job_request_id = serializer.validated_data['job_request_id']
-            print(job_request_id)
+            # print(job_request_id)
             cache.set("job_request_id", job_request_id)
             mpesa_number = serializer.validated_data['mpesa_number']
             modified_mpesa_number = f"254{mpesa_number.lstrip('0')}"
@@ -35,9 +35,9 @@ class PaymentAPIView(APIView):
             amount = 1
             phone_number = modified_mpesa_number
             transaction_description = "Description"
-            callback_url = 'https://117e-41-89-10-241.ngrok-free.app/api/payment/results/'
+            callback_url = 'https://4586-41-89-10-241.ngrok-free.app/api/payment/results/'
             response = cl.stk_push(phone_number, amount,reference, transaction_description, callback_url)
-            # print(response)
+            print(response)
             return Response(response)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)            
 

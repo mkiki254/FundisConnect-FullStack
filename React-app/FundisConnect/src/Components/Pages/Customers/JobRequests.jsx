@@ -3,7 +3,8 @@ import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import ProfileCard from './JobRequests/ProfileCard'
 import Map from '../Map'
-import RouteMap from '../RouteMap'
+import CalculateDistance from '../CalculateDistance'
+
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -13,29 +14,12 @@ const client = axios.create({
     baseURL: "http://127.0.0.1:8000"
 })
 
-// The routing map will be used by the artisan to find their way to the
-// customers place
-
-// The customer side will just need calculating distance between their 
-// job locations and artisans and find the artisans nearest to them.
-
-export default function JobRequests(){
+export default function JobRequests(props){
     const [selectedService, setSelectedService] = useState('');
-    const [artisanData, setArtisanData] = useState([])
     const [locate, setLocate] = useState(null)
     const [viewLocation, setViewLocation] = useState(false)
-   
-    useEffect(() => {
-        client.get("/api/artisan/profile/personal-info/").then(
-           res => {
-            const dta = res.data.features
-            setArtisanData(dta)
-            // console.log(dta)
-           }
-        ).catch(error => {
-            console.log(error)
-        })
-    }, [selectedService])
+    const [findArtisans, setFindArtisans] = useState(false)
+    const artisans = props.artisans
 
     const handleSelectChange = (event) => {
       setSelectedService(event.target.value);
@@ -59,13 +43,32 @@ export default function JobRequests(){
         return () => {
           clearTimeout(timeoutId);
         };
-      }, [selectedService, locate]);   
-
+      }, [selectedService, locate]);  
+      
+      
+      function handleFindArtisans(){
+        setFindArtisans(true)
+      }
     
     // console.log(artisanData)
     // console.log(locate)
 
-    const artisanDataElements = locate && artisanData.map(artisan => {
+    const location = [36.8219, -1.2921]
+    
+    const modifiedArtisanData = artisans.map(artisan => {
+      const startLatLng = artisan.geometry.coordinates;
+      const endLatLng = locate ? [locate.x, locate.y] : location
+      const distance = Math.round(CalculateDistance({ startLatLng, endLatLng, locate }));
+      return {
+        ...artisan,
+        distance: distance
+      }
+    });    
+
+    const SortedArtisanData = findArtisans && locate && modifiedArtisanData.map((artisan) => artisan).sort((a, b) => a.distance - b.distance)
+    // console.log(SortedArtisanData)
+
+    const artisanDataElements = findArtisans && locate && SortedArtisanData && SortedArtisanData.map(artisan => {
         if(artisan.properties.specialization == selectedService){
           return(
             <>
@@ -75,8 +78,7 @@ export default function JobRequests(){
                 profilePic={artisan.properties.profile_picture}
                 firstname = {artisan.properties.first_name}
                 lastname = {artisan.properties.last_name}
-                startLatLng = {[locate.x, locate.y]}
-                endLatLng = {artisan.geometry.coordinates}
+                distance = {artisan.distance}
                 />
             </>
           )
@@ -85,7 +87,7 @@ export default function JobRequests(){
   
     return(
         <>
-        {(!selectedService || !locate || !viewLocation) && 
+        {(!selectedService || !locate || !viewLocation || !findArtisans) && 
         (<div className="d-flex justify-content-center align-items-center flex-column selectedService">
             <h1>Make Job Requests</h1>
             <Form.Label>Select Service</Form.Label>
@@ -103,10 +105,10 @@ export default function JobRequests(){
             <Form.Label>Search your Location</Form.Label>
             <div>
                 <Map location={locate} onLocationChange={handleLocationChange} />
-                {/* <RouteMap /> */}
-            </div>                
+            </div>
+            <Button onClick={handleFindArtisans}>Find Artisans</Button>                
         </div>)}
-        {selectedService && locate && viewLocation && 
+        {selectedService && locate && viewLocation && findArtisans && 
         (<div className="text-center">
           <h1>Artisan profiles</h1>
         </div>)}
