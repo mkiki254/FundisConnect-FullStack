@@ -101,7 +101,7 @@ export default function JobAccepted(props){
                     setPaymentResponse("")
                     setIsClicked(false)
                     setPaySuccessResponse("Unfortunately, payment not successful")
-                }, 15000)
+                }, 20000)
 
                 return () => {
                     clearTimeout(timeoutId)
