@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.gis.admin import OSMGeoAdmin
 from .models import ArtisanPersonalInfo
-from django.templatetags.static import static
 
 @admin.register(ArtisanPersonalInfo)
 class ArtisanPersonalInfoAdmin(OSMGeoAdmin):

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 """
 import os
+from .juzmin import JAZZMIN_SETTINGS
 
 # Construct the complete path
 from pathlib import Path
@@ -53,9 +54,14 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 
+# Working on django admin
+X_FRAME_OPTIONS = 'ALLOWALL'
+
+
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'rest_framework',
     'rest_framework_gis',
     'corsheaders',
@@ -92,7 +98,7 @@ ROOT_URLCONF = 'FundisConnect.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates"),],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -209,6 +215,5 @@ MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c91
 
 LNM_PHONE_NUMBER = "254714456992"
 
-
-# Working on django admin
-X_FRAME_OPTIONS = 'ALLOWALL'
+# Jazzmin settings
+JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
