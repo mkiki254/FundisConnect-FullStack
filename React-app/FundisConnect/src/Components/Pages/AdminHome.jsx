@@ -1,14 +1,33 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-import { useAuthContext } from '../AuthContext'
-import { useNavigate } from 'react-router-dom'
 
 
-export default function Artisan(){    
+export default function Artisan(){  
+    useEffect(() => {
+        const iframe = document.getElementById('myIframe');
+        const container = document.getElementById('iframeContainer');
+        const adjustContainerHeight = () => {
+          container.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+        };
+        iframe.addEventListener('load', adjustContainerHeight);
+        return () => {
+          iframe.removeEventListener('load', adjustContainerHeight);
+        };
+      }, []);
+
     return (
-        <>
-        <h1>This is the Admin homepage</h1>
-        </>
+        <div id="iframeContainer">
+            <iframe 
+            id="myIframe"
+            src="http://127.0.0.1:8000/admin/"
+            style={{
+                width: '100%',
+                height: '100vh',
+                border: 'none',
+                overflow: 'hidden',
+                border: 'none',
+              }}
+            />
+        </div>
     )
 }
 

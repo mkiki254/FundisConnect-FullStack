@@ -74,8 +74,6 @@ INSTALLED_APPS = [
     # https://github.com/un1t/django-cleanup
     'django_cleanup.apps.CleanupConfig',
     'django_daraja',
-    # https://pypi.org/project/django-api-admin/
-    'django_api_admin',
 ]
 
 MIDDLEWARE = [
@@ -161,7 +159,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -208,3 +208,7 @@ MPESA_EXPRESS_SHORTCODE = "174379"
 MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
 
 LNM_PHONE_NUMBER = "254714456992"
+
+
+# Working on django admin
+X_FRAME_OPTIONS = 'ALLOWALL'
