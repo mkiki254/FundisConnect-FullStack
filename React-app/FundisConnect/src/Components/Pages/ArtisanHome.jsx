@@ -50,6 +50,8 @@ export default function Artisan(){
         })
     }, [dashboard])
 
+    console.log(artisanData)
+
     function handleDashboard(){
         setDashboard(true)
         setArtisanProfile(false)

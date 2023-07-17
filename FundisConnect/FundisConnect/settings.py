@@ -38,7 +38,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    'b254-41-89-10-241.ngrok-free.app',
+    '1a4a-41-89-10-241.ngrok-free.app',
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -203,9 +203,9 @@ FRONTEND_URL = 'http://127.0.0.1:3000'
 # Mpesa STK Push configuration
 MPESA_ENVIRONMENT = 'sandbox'
 
-MPESA_CONSUMER_KEY = "fkcgwBNItRcQGno2MwA1XeNgqKZ5GKRR"
+MPESA_CONSUMER_KEY = "HNHqE4JY2Tg67QnXHHoGksgruRuVMpWT"
 
-MPESA_CONSUMER_SECRET = "CPyuyturGhgR6pnL"
+MPESA_CONSUMER_SECRET = "QYQrn0yAXWQqk2kd"
 
 MPESA_SHORTCODE = "174379"
 

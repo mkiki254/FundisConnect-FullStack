@@ -24,7 +24,6 @@ export default function Artisan(){
                 height: '100vh',
                 border: 'none',
                 overflow: 'hidden',
-                border: 'none',
               }}
             />
         </div>
