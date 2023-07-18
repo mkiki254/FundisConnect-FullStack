@@ -20,6 +20,11 @@ export default function AcceptedJobDetails(){
     const [artisanDetails, setArtisanDetails] = useState()
     const [picVid, setPicVid] = useState(null)
     const navigate = useNavigate()
+    const [customerData, setCustomerData] = useState();
+    const [customerDetails, setCustomerDetails] = useState([]);
+
+    // console.log(jobDetails)
+    // console.log(customerData)
 
     // console.log(jobRequestId)
     useEffect(() => {
@@ -58,6 +63,23 @@ export default function AcceptedJobDetails(){
         })
     }, [])
 
+    useEffect(() => {
+        client.get('/api/customer/jobrequest/customer-details/').then((res) => {
+          const dta = res.data;
+          setCustomerData(dta);
+        });
+      }, []);
+
+    useEffect(() => {
+        if(customerData && jobDetails){
+            const cust = customerData.filter((client) => client.user_id === jobDetails.properties.customer);
+            setCustomerDetails(cust[0]);
+        }
+    }, [customerData, jobDetails]);
+
+    // console.log(customerDetails)
+    
+
     // console.log(artisanDetails.geometry.coordinates)
 
     const isoDateString = jobDetails && jobDetails.properties.schedule
@@ -72,15 +94,10 @@ export default function AcceptedJobDetails(){
         hour12: true
     });
 
-     // Going back to profiles
-    function handleGoBack(){
-        navigate("/artisan-home")
-    }
-
     return (
         <div className='job-details'>
             <h1 className='job-details-title'>Accepted Job Details</h1>
-            {jobDetails && artisanDetails &&
+            {jobDetails && artisanDetails && customerDetails &&
              (<Row>
                 <Col>
                     <p>Job Title</p>
@@ -91,6 +108,10 @@ export default function AcceptedJobDetails(){
                     <h5>{formattedDate}</h5>
                     <p>Address</p>
                     <h5>{jobDetails.properties.address}</h5>
+                    <p>Customer Name</p>
+                    <h5>{customerDetails.username}</h5>
+                    <p>Customer Phone</p>
+                    <h5>{customerDetails.phone}</h5>
                 </Col>
                 <Col>
                     <RouteMap

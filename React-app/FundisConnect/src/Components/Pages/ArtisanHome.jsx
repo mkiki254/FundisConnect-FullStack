@@ -50,8 +50,6 @@ export default function Artisan(){
         })
     }, [dashboard])
 
-    console.log(artisanData)
-
     function handleDashboard(){
         setDashboard(true)
         setArtisanProfile(false)
@@ -109,8 +107,16 @@ export default function Artisan(){
         specialization={artisanData.properties.specialization}
         profile_picture={imageUrl}
          />}
-        {jobrequests && <JobRequests />}
-        {acceptedJobs && <AcceptedJobs />}
+        {jobrequests && 
+        <JobRequests 
+        artisan_id = {artisanData.id}
+        artisanData={artisanData}
+        />}
+        {acceptedJobs &&
+        <AcceptedJobs 
+        artisan_id = {artisanData.id}
+        artisanData={artisanData}
+        />}
         </>
     )
 }

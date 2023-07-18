@@ -12,41 +12,17 @@ const client = axios.create({
 })
 
 
-export default function JobRequests(){
+export default function JobRequests(props){
     const [jobData, setJobData] = useState([])
-    const [allArtisans, setAllArtisans] = useState([])
-    const [artisanId, setArtisanId] = useState()
     const [acceptedJobs, setAcceptedJobs] = useState([])
-    const [reading, setReading] = useState(false)
-
-    useEffect(() => {
-        client.get("/api/user/").then(
-            res => {
-                const user = res.data.user.user_id
-                setArtisanId(user)
-            }
-        )
-    },[])
-
-    // console.log(artisanId)
+    const artisan_id = props.artisan_id
+    const [customerData, setCustomerData] = useState()
 
     useEffect(() => {
         client.get("/api/customer/jobrequest/").then(
            res => {
             const dta = res.data.features
             setJobData(dta)
-            // console.log(dta)
-           }
-        ).catch(error => {
-            console.log(error)
-        })
-    }, [])
-
-    useEffect(() => {
-        client.get("/api/artisan/profile/personal-info/").then(
-           res => {
-            const dta = res.data.features
-            setAllArtisans(dta)
             // console.log(dta)
            }
         ).catch(error => {
@@ -72,32 +48,8 @@ export default function JobRequests(){
 
     const reversedJobDataElements = [...NewJobDataElements].reverse()
 
-
-    // console.log(jobData)
-    // console.log(NewJobDataElements)
-
-    const artisan = artisanId && allArtisans.filter(artisan => {
-        if(artisan.properties.user == artisanId){
-            return artisan
-        }
-    })
-
-    useEffect(() => {
-        let timeoutId;
-        
-        timeoutId = setTimeout(() => {
-            setReading(true)
-        }, 1000);
-        
-
-        return () => {
-            clearTimeout(timeoutId);
-        };
-    }, [artisan]);
-    // console.log(artisan[0])
-
-    const jobDataElements = reading && artisanId && artisan && reversedJobDataElements && reversedJobDataElements.map(jobs => {
-        if(jobs.properties.selected_artisan == artisan[0].id){
+    const jobDataElements = reversedJobDataElements && reversedJobDataElements.map(jobs => {
+        if(jobs.properties.selected_artisan == artisan_id){
             // return jobs
             return (
                 <ViewAccepted
@@ -108,21 +60,6 @@ export default function JobRequests(){
             )
         }
     })
-
-    // const jobDataElements = reading && jobData.map(jobs => {
-    //     if(jobs.properties.selected_artisan == artisan[0].id){
-    //         // return jobs
-    //         return (
-    //             <ViewRequests
-    //             job_id = {jobs.id}
-    //             schedule = {jobs.properties.schedule} 
-    //             job_title = {jobs.properties.job_title}        
-    //              />
-    //         )
-    //     }
-    // })
-
-    // console.log(jobDataElements)
 
     return (
         <div className="rec-req">
