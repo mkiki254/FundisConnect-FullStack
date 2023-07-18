@@ -158,4 +158,42 @@
     margin: 20px;
   }
 
+  .joblist {
+    margin: 20px;
+  }
+
+  .joblist .logo {
+    margin-right: 5vw;
+  }
+
+  .joblist .heading {
+    background-color: #a491bf;
+    color: #ffffff;
+    padding: 10px;
+  }
+
+  .joblist .schedule {
+    margin-left: 3vw;
+    width: 15vw;
+  }
+
+  .joblist .title {
+    margin-left: 3vw;
+    width: 20vw;
+  }
+
+  .joblist .name {
+    margin-left: 3vw;
+    width: 10vw;
+  }
+
+  .joblist .phone {
+    margin-left: 3vw;
+    width: 10vw;
+  }
+  .joblist .email {
+    margin-left: 3vw;
+    width: 15vw;
+  }
+
 

@@ -107,12 +107,12 @@ export default function Artisan(){
         specialization={artisanData.properties.specialization}
         profile_picture={imageUrl}
          />}
-        {jobrequests && 
+        {jobrequests && artisanData && 
         <JobRequests 
         artisan_id = {artisanData.id}
         artisanData={artisanData}
         />}
-        {acceptedJobs &&
+        {acceptedJobs && artisanData &&
         <AcceptedJobs 
         artisan_id = {artisanData.id}
         artisanData={artisanData}

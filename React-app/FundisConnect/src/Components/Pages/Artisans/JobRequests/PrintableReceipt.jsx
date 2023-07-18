@@ -49,7 +49,7 @@ const PrintableReceipt = forwardRef(({ paymentDetails, customerDetails, jobTitle
                     <Row>
                     <Col className="second-col">
                         <p>Name</p>
-                        <h5>{customerDetails[0].username}</h5>
+                        <h5>{customerDetails[0].username.charAt(0).toUpperCase() + customerDetails[0].username.slice(1)}</h5>
                         <p>Email</p>
                         <h5>{customerDetails[0].email}</h5>
                     </Col>

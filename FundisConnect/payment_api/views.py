@@ -35,7 +35,7 @@ class PaymentAPIView(APIView):
             amount = 1
             phone_number = modified_mpesa_number
             transaction_description = "Description"
-            callback_url = 'https://1a4a-41-89-10-241.ngrok-free.app/api/payment/results/'
+            callback_url = 'https://28ef-41-89-10-241.ngrok-free.app/api/payment/results/'
             response = cl.stk_push(phone_number, amount,reference, transaction_description, callback_url)
             print(response)
             return Response(response)

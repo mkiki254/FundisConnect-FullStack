@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import ViewAccepted from './AcceptedJobs/ViewAccepted'
 import "../../../Styles/jobrequests.css"
+import { Button } from 'react-bootstrap'
+import JobList from './AcceptedJobs/JobList'
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -16,7 +18,7 @@ export default function JobRequests(props){
     const [jobData, setJobData] = useState([])
     const [acceptedJobs, setAcceptedJobs] = useState([])
     const artisan_id = props.artisan_id
-    const [customerData, setCustomerData] = useState()
+    const [downloadList, setDownLoadList] = useState(false)
 
     useEffect(() => {
         client.get("/api/customer/jobrequest/").then(
@@ -61,6 +63,20 @@ export default function JobRequests(props){
         }
     })
 
+    function handleDownloadList(){
+        setDownLoadList(true)
+    }
+
+    if(downloadList){
+        return (
+            <div>
+                <JobList 
+                acceptedJobs={reversedJobDataElements}
+                />
+            </div>
+        )
+    }
+
     return (
         <div className="rec-req">
             <h1 className='text-center pg-title'>View Accepted Jobs</h1>
@@ -70,6 +86,9 @@ export default function JobRequests(props){
                 <h4 className="details">View More Details</h4>
             </div>
             {jobDataElements}
+            <div className='d-flex justify-content-center text-center'>
+                <Button onClick={handleDownloadList}>Download List</Button>
+            </div>
         </div>
     )
 }
