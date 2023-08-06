@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import ViewAccepted from './AcceptedJobs/ViewAccepted'
-import "../../../Styles/jobrequests.css"
+import "../../../Styles/JobRequests.css"
 import { Button } from 'react-bootstrap'
 import JobList from './AcceptedJobs/JobList'
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import ViewRequests from './JobRequests/ViewRequests'
-import "../../../Styles/jobrequests.css"
+import "../../../Styles/JobRequests.css"
 
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = 'X-CSRFToken'
@@ -72,3 +72,5 @@ export default function JobRequests(props){
         </div>
     )
 }
+
+
