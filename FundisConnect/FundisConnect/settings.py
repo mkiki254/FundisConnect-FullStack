@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 """
 import os
+import environ
 from .juzmin import JAZZMIN_SETTINGS
 
 # Construct the complete path
@@ -18,6 +19,10 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Read configuration from FundisConnect/.env
+env = environ.Env(DJANGO_DEBUG=(bool, False))
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Defining the path for GDAL
 # https://www.pointsnorthgis.ca/blog/geodjango-gdal-setup-windows-10/
@@ -31,15 +36,12 @@ if os.name == 'nt':
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qjb%06i^jq=y+lb$1^1tvldin#8ue%xh*)n9-hspcr0-zrzf3x'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    '50cc-102-219-210-201.ngrok-free.app',
-]
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[])
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
@@ -123,11 +125,11 @@ WSGI_APPLICATION = 'FundisConnect.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'fundisconnect',
-        'USER': 'postgres',
-        'PASSWORD': 'Karis123!',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST', default='127.0.0.1'),
+        'PORT': env('DB_PORT', default='5432'),
     }
 }
 
