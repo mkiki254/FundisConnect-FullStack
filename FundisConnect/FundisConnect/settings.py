@@ -193,29 +193,27 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # SMTP Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'fundisconnectke@gmail.com'
-EMAIL_HOST_PASSWORD = 'dirxcorraznucixu'
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 FRONTEND_URL = 'http://127.0.0.1:3000'
 
 # Mpesa STK Push configuration
-MPESA_ENVIRONMENT = 'sandbox'
+MPESA_ENVIRONMENT = env('MPESA_ENVIRONMENT', default='sandbox')
 
-MPESA_CONSUMER_KEY = "HNHqE4JY2Tg67QnXHHoGksgruRuVMpWT"
+MPESA_CONSUMER_KEY = env('MPESA_CONSUMER_KEY')
 
-MPESA_CONSUMER_SECRET = "QYQrn0yAXWQqk2kd"
+MPESA_CONSUMER_SECRET = env('MPESA_CONSUMER_SECRET')
 
-MPESA_SHORTCODE = "174379"
+MPESA_SHORTCODE = env('MPESA_SHORTCODE')
 
-MPESA_EXPRESS_SHORTCODE = "174379"
+MPESA_EXPRESS_SHORTCODE = env('MPESA_EXPRESS_SHORTCODE')
 
-MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
-
-LNM_PHONE_NUMBER = "254714456992"
+MPESA_PASSKEY = env('MPESA_PASSKEY')
 
 # Jazzmin settings
 JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
