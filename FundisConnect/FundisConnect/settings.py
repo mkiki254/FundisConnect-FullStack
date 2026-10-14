@@ -43,17 +43,12 @@ DEBUG = env('DJANGO_DEBUG')
 
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[])
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-]
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
 
 CORS_ALLOW_CREDENTIALS = True
 
 # So i have to include trusted origins
-CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:3000',
-]
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
 
 
 # Working on django admin
@@ -200,7 +195,7 @@ EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
-FRONTEND_URL = 'http://127.0.0.1:3000'
+FRONTEND_URL = env('FRONTEND_URL')
 
 # Mpesa STK Push configuration
 MPESA_ENVIRONMENT = env('MPESA_ENVIRONMENT', default='sandbox')
