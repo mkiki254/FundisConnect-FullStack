@@ -7,6 +7,7 @@ from rest_framework.test import APITestCase
 
 from artisans_api.models import ArtisanPersonalInfo
 from customers_api.models import CustomerJobRequests
+from payment_api.models import ArtisanPayment
 
 User = get_user_model()
 JOB_LIST_URL = '/api/customer/jobrequest/'
@@ -113,3 +114,70 @@ class JobRequestAccessTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.job.refresh_from_db()
         self.assertEqual(self.job.job_title, 'Updated title')
+
+CUSTOMER_DETAILS_URL = '/api/customer/jobrequest/customer-details/'
+
+
+def make_artisan(email, username, phone, first_name):
+    user = User.objects.create_user(
+        email=email, username=username, usertype='artisan', phone=phone, password='testpass123')
+    profile = ArtisanPersonalInfo.objects.create(
+        user=user, first_name=first_name, last_name='Test', specialization='plumber',
+        location=Point(36.82, -1.29, srid=4326))
+    return user, profile
+
+
+def make_job(customer, artisan_profile, title):
+    return CustomerJobRequests.objects.create(
+        customer=customer, selected_artisan=artisan_profile, job_title=title,
+        job_description='Test job.', schedule=timezone.now() + timedelta(days=7),
+        address='Test Building, Nairobi', location=Point(36.8172, -1.2864, srid=4326))
+
+
+def pay_for(artisan_user, job):
+    return ArtisanPayment.objects.create(
+        artisan=artisan_user, job_request_id=job, transaction_code=f'TEST{job.pk}',
+        artisan_number=artisan_user.phone, transaction_date=timezone.now(), amount_paid=100)
+
+
+class CustomerDetailsGateTests(APITestCase):
+    """An artisan sees a customer's contact details only after paying for that customer's job."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.customer1 = User.objects.create_user(
+            email='customer1@example.com', username='customer1',
+            usertype='customer', phone='0711111111', password='testpass123')
+        cls.customer2 = User.objects.create_user(
+            email='customer2@example.com', username='customer2',
+            usertype='customer', phone='0744444444', password='testpass123')
+        cls.artisan1, profile1 = make_artisan('artisan1@example.com', 'artisan1', '0733333333', 'One')
+        cls.artisan2, profile2 = make_artisan('artisan2@example.com', 'artisan2', '0755555555', 'Two')
+        cls.job1 = make_job(cls.customer1, profile1, 'Job for artisan1')
+        cls.job2 = make_job(cls.customer2, profile2, 'Job for artisan2')
+
+    def emails_seen_by(self, user):
+        self.client.force_login(user)
+        response = self.client.get(CUSTOMER_DETAILS_URL)
+        self.assertEqual(response.status_code, 200)
+        return {item['email'] for item in response.data}
+
+    def test_artisan_sees_no_customers_before_paying(self):
+        self.assertEqual(self.emails_seen_by(self.artisan1), set())
+
+    def test_artisan_sees_the_customer_after_paying(self):
+        pay_for(self.artisan1, self.job1)
+        self.assertEqual(self.emails_seen_by(self.artisan1), {'customer1@example.com'})
+
+    def test_payment_for_one_job_reveals_only_that_customer(self):
+        pay_for(self.artisan2, self.job2)
+        self.assertEqual(self.emails_seen_by(self.artisan2), {'customer2@example.com'})
+        self.assertEqual(self.emails_seen_by(self.artisan1), set())   # artisan1 has paid for nothing
+
+    def test_customers_cannot_use_the_endpoint(self):
+        for customer in (self.customer1, self.customer2):
+            self.client.force_login(customer)
+            self.assertEqual(self.client.get(CUSTOMER_DETAILS_URL).status_code, 403)
+
+    def test_anonymous_user_is_refused(self):
+        self.assertEqual(self.client.get(CUSTOMER_DETAILS_URL).status_code, 403)

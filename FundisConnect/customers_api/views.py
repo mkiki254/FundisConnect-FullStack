@@ -8,6 +8,8 @@ from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth import get_user, get_user_model
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
+from payment_api.models import ArtisanPayment
+from user_api.permissions import IsArtisan
 
 def visible_job_requests(user):
     """Job requests this user may read: a customer's own, or those addressed to the artisan."""
@@ -71,10 +73,12 @@ class CustomerJobRequestsDetailAPIView(APIView):
 
 User = get_user_model()
 class CustomerDetailsAPIView(APIView):
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticated, IsArtisan)
     authentication_classes = (SessionAuthentication, )
 
     def get(self, request):
-        customer_details = User.objects.filter(usertype='customer')
+        paid_customer_ids = ArtisanPayment.objects.filter(
+            artisan=request.user).values_list('job_request_id__customer', flat=True)
+        customer_details = User.objects.filter(pk__in=paid_customer_ids, usertype='customer')
         serializer = CustomerDetailsSerializer(customer_details, many=True)
         return Response(serializer.data)
