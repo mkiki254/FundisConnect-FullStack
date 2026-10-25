@@ -181,3 +181,33 @@ class CustomerDetailsGateTests(APITestCase):
 
     def test_anonymous_user_is_refused(self):
         self.assertEqual(self.client.get(CUSTOMER_DETAILS_URL).status_code, 403)
+
+class JobRequestCreationTests(APITestCase):
+    """Only customers create job requests."""
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.customer = User.objects.create_user(
+            email='customer1@example.com', username='customer1',
+            usertype='customer', phone='0711111111', password='testpass123')
+        cls.artisan_user, profile = make_artisan('artisan1@example.com', 'artisan1', '0733333333', 'One')
+        cls.job_data = {
+            'job_title': 'Leaking kitchen sink',
+            'job_description': 'Water leaks under the sink.',
+            'schedule': '2026-11-20T09:00:00.000Z',
+            'address': 'Test Building, Nairobi',
+            'selected_artisan': profile.pk,
+            'location': 'POINT(36.8172 -1.2864)',
+        }
+
+    def test_customer_can_create_a_job_request(self):
+        # Control test
+        self.client.force_login(self.customer)
+        response = self.client.post(JOB_LIST_URL, self.job_data, format='multipart')
+        self.assertEqual(response.status_code, 201)
+
+    def test_artisan_cannot_create_a_job_request(self):
+        self.client.force_login(self.artisan_user)
+        response = self.client.post(JOB_LIST_URL, self.job_data, format='multipart')
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(CustomerJobRequests.objects.count(), 0)

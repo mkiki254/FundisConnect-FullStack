@@ -8,9 +8,14 @@ from rest_framework.authentication import SessionAuthentication
 from django.contrib.auth import get_user
 from .validations import profileCustomValidation
 from rest_framework.parsers import MultiPartParser, FormParser
+from django.shortcuts import get_object_or_404
 
 class ArtisanPersonalInfoListAPIView(APIView):
-    permission_classes = (permissions.IsAuthenticated, )
+    def get_permissions(self):
+        # Browsing artisans is open to any logged-in user; creating a profile is for artisans only
+        if self.request.method == 'POST':
+            return [permissions.IsAuthenticated(), IsArtisan()]
+        return [permissions.IsAuthenticated()]
     authentication_classes = (SessionAuthentication, )
     parser_classes = (MultiPartParser, FormParser)
 
@@ -20,6 +25,9 @@ class ArtisanPersonalInfoListAPIView(APIView):
         return Response(serializer.data)
     
     def post(self, request):
+        if ArtisanPersonalInfo.objects.filter(user=request.user).exists():
+            return Response({'detail': ['You already have an artisan profile.']},
+                            status=status.HTTP_400_BAD_REQUEST)
         serializer = ArtisanPersonalInfoSerializer(data=request.data)
         if serializer.is_valid():
             user = get_user(request)   #Get the logged in user
@@ -35,10 +43,7 @@ class ArtisanPersonalInfoDetailAPIView(APIView):
 
     # Deriving objects based on logged in user
     def get_object(self, user_id):
-        try:
-            return ArtisanPersonalInfo.objects.get(user_id=user_id)
-        except ArtisanPersonalInfo.DoesNotExist:
-            raise status.HTTP_404_NOT_FOUND
+        return get_object_or_404(ArtisanPersonalInfo, user_id=user_id)
     
     def get(self, request):
         # Getting id of logged in user

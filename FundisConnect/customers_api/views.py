@@ -26,7 +26,11 @@ def owned_job_requests(user):
 
 
 class CustomerJobRequestsListAPIView(APIView):
-    permission_classes = (permissions.IsAuthenticated, )
+    def get_permissions(self):
+        # Anyone logged in may list (the queryset is scoped by role); only customers may create
+        if self.request.method == 'POST':
+            return [permissions.IsAuthenticated(), IsCustomer()]
+        return [permissions.IsAuthenticated()]
     authentication_classes = (SessionAuthentication, )
     parser_classes = (MultiPartParser, FormParser)
 
