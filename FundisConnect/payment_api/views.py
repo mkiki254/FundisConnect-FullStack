@@ -42,10 +42,16 @@ class PaymentAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)            
 
 class PaymentResultsAPIView(APIView):
-    permission_classes = (permissions.AllowAny, )   
-     
+    def get_permissions(self):
+        # M-Pesa's servers deliver the payment result with a POST and cannot log in.
+        # Reading payment records is for logged-in artisans only.
+        if self.request.method == 'POST':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated(), IsArtisan()]
+
     def get(self, request):
-        artisan_payments = ArtisanPayment.objects.all()
+        # An artisan sees only their own payments
+        artisan_payments = ArtisanPayment.objects.filter(artisan=request.user)
         serializer = ArtisanPaymentSerializer(artisan_payments, many=True)
         return Response(serializer.data)
 
