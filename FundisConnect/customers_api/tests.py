@@ -1,5 +1,6 @@
+import shutil
+import tempfile
 from datetime import timedelta
-
 from django.contrib.auth import get_user_model
 from django.contrib.gis.geos import Point
 from django.utils import timezone
@@ -8,6 +9,9 @@ from rest_framework.test import APITestCase
 from artisans_api.models import ArtisanPersonalInfo
 from customers_api.models import CustomerJobRequests
 from payment_api.models import ArtisanPayment
+
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import override_settings
 
 User = get_user_model()
 JOB_LIST_URL = '/api/customer/jobrequest/'
@@ -182,9 +186,12 @@ class CustomerDetailsGateTests(APITestCase):
     def test_anonymous_user_is_refused(self):
         self.assertEqual(self.client.get(CUSTOMER_DETAILS_URL).status_code, 403)
 
+TEMP_MEDIA_ROOT = tempfile.mkdtemp()   # tests write uploads here, never into your real media/ folder
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
 class JobRequestCreationTests(APITestCase):
     """Only customers create job requests."""
-
+    
     @classmethod
     def setUpTestData(cls):
         cls.customer = User.objects.create_user(
@@ -211,3 +218,29 @@ class JobRequestCreationTests(APITestCase):
         response = self.client.post(JOB_LIST_URL, self.job_data, format='multipart')
         self.assertEqual(response.status_code, 403)
         self.assertEqual(CustomerJobRequests.objects.count(), 0)
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
+        super().tearDownClass()
+
+    def post_job_with_file(self, upload):
+        self.client.force_login(self.customer)
+        data = {**self.job_data, 'job_photo_video': upload}
+        return self.client.post(JOB_LIST_URL, data, format='multipart')
+
+    def test_small_image_is_accepted(self):
+        upload = SimpleUploadedFile('sink.png', b'small test bytes', content_type='image/png')
+        self.assertEqual(self.post_job_with_file(upload).status_code, 201)
+
+    def test_oversized_file_is_rejected(self):
+        upload = SimpleUploadedFile('big.png', b'0' * (10 * 1024 * 1024 + 1), content_type='image/png')
+        response = self.post_job_with_file(upload)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('job_photo_video', response.data)
+
+    def test_html_file_is_rejected(self):
+        upload = SimpleUploadedFile('page.html', b'<script>alert(1)</script>', content_type='text/html')
+        response = self.post_job_with_file(upload)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('job_photo_video', response.data)
