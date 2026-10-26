@@ -244,3 +244,8 @@ class JobRequestCreationTests(APITestCase):
         response = self.post_job_with_file(upload)
         self.assertEqual(response.status_code, 400)
         self.assertIn('job_photo_video', response.data)
+
+    def test_short_video_above_the_image_limit_is_accepted(self):
+        # 11 MB: over the 10 MB image cap, under the 50 MB video cap
+        upload = SimpleUploadedFile('leak.mp4', b'0' * (11 * 1024 * 1024), content_type='video/mp4')
+        self.assertEqual(self.post_job_with_file(upload).status_code, 201)
