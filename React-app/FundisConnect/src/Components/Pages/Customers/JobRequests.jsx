@@ -1,18 +1,11 @@
 import { Form, Button } from 'react-bootstrap'
 import { useState, useEffect, useCallback } from 'react'
-import axios from 'axios'
+import client from '@/api'
 import ProfileCard from './JobRequests/ProfileCard'
 import Map from '../Map'
 import CalculateDistance from '../CalculateDistance'
 
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
-
-const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
 
 export default function JobRequests(props){
     const [selectedService, setSelectedService] = useState('');

@@ -18,7 +18,7 @@ export default function Artisan(){
         <div id="iframeContainer">
             <iframe 
             id="myIframe"
-            src="http://127.0.0.1:8000/admin/"
+            src="/admin/"
             style={{
                 width: '100%',
                 height: '100vh',

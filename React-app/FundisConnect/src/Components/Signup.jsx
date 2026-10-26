@@ -1,19 +1,12 @@
 import '../Styles/Signup.css'
 import { Button, Form, Alert, Row, Col } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
-import axios from 'axios';
+import client from '@/api'
 import { useAuthContext } from './AuthContext';
 import { useNavigate } from 'react-router-dom';
 import useLogin from './useLogin';
 import {Link} from 'react-router-dom'
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
-
-const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
 
 export default function Signup() {
     const { setUserDetails, isLoggedIn, setIsLoggedIn, setActiveUser, getHomeRoute } = useAuthContext();

@@ -1,17 +1,10 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import client from '@/api'
 import { Button } from 'react-bootstrap'
 import Dashboard from './Customers/Dashboard'
 import JobRequests from './Customers/JobRequests'
 import RateArtisan from './Customers/RateArtisan'
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
-
-const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
 
 export default function Customer(){
     const [dashboard, setDashboard] = useState(true)

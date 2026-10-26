@@ -6,15 +6,8 @@ import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primereact/resources/primereact.min.css';
 import { Calendar } from 'primereact/calendar';
 import Map from '../../Map'
-import axios from 'axios'
+import client from '@/api'
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
-
-const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
 
 export default function MakeRequest(){
     const navigate = useNavigate()

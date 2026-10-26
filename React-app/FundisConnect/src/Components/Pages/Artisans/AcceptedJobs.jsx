@@ -1,17 +1,10 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import client from '@/api'
 import ViewAccepted from './AcceptedJobs/ViewAccepted'
 import "../../../Styles/JobRequests.css"
 import { Button } from 'react-bootstrap'
 import JobList from './AcceptedJobs/JobList'
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
-
-const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
 
 
 export default function JobRequests(props){

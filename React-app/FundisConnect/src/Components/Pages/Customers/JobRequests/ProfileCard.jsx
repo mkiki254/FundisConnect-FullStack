@@ -1,16 +1,9 @@
 import { Button } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import client from '@/api'
 import { useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../../AuthContext'
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
-
-const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
 
 export default function ProfileCard(props){
     const [imageUrl, setImageUrl] = useState()

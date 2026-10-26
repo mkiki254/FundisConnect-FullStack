@@ -1,16 +1,9 @@
-import axios from 'axios'
+import client from '@/api'
 import Map from '../Map'
 import { useState, useEffect, useCallback } from 'react'
 import { Button, Form, Alert, Row, Col } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom'
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
-
-const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
 
 export default function ViewProfile(props){
     const navigate = useNavigate()
