@@ -13,9 +13,12 @@ from .serializers import PasswordResetRequestSerializer
 from .models import PasswordResetToken
 from .serializers import PasswordResetConfirmSerializer
 from django.conf import settings
+from rest_framework.throttling import ScopedRateThrottle
 
 
 class UserRegister(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
     permission_classes = (permissions.AllowAny, )
     def post(self, request):
         clean_data = custom_validation(request.data)
@@ -28,6 +31,8 @@ class UserRegister(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class UserLogin(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
     permission_classes = (permissions.AllowAny, )
     authentication_classes = (SessionAuthentication, )
     ##
@@ -88,6 +93,8 @@ class AdminView(APIView):
     authentication_classes = (SessionAuthentication, )
 
 class PasswordResetRequestView(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
     permission_classes = []
 
     def post(self, request):
@@ -121,6 +128,8 @@ class PasswordResetRequestView(APIView):
 
 
 class PasswordResetConfirmView(APIView):
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'auth'
     permission_classes = []
 
     def post(self, request):

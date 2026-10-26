@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase
+from django.core.cache import cache
 
 User = get_user_model()
 REGISTER_URL = '/api/register'
@@ -16,7 +17,10 @@ VALID_CUSTOMER = {
 
 class RegistrationTests(APITestCase):
 
+    
+
     def setUp(self):
+        cache.clear()
         # Return a 500 response instead of re-raising the exception, so a crash
         # shows up as "500 != 400", the same thing you saw in Postman
         self.client.raise_request_exception = False
@@ -77,6 +81,7 @@ class LoginTests(APITestCase):
             usertype='customer', phone='0711111111', password='testpass123')
 
     def setUp(self):
+        cache.clear()
         self.client.raise_request_exception = False
         self.credentials = {'email': 'customer1@example.com', 'password': 'testpass123'}
 
