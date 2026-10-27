@@ -1,6 +1,11 @@
+import io
+import shutil
+import tempfile
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import override_settings
+from PIL import Image
 from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase
-
 from artisans_api.models import ArtisanPersonalInfo
 from customers_api.tests import make_artisan   # shared helper, reused from the job-request tests
 
@@ -59,3 +64,45 @@ class ArtisanProfileTests(APITestCase):
     def test_missing_profile_returns_404_not_500(self):
         self.client.force_login(self.new_artisan)
         self.assertEqual(self.client.get(PROFILE_DETAIL_URL).status_code, 404)
+
+TEMP_MEDIA_ROOT = tempfile.mkdtemp()   # uploads go here, never into your real media/ folder
+
+
+def image_file(name, fmt):
+    """A real, tiny image: it passes Pillow's content check, so only the extension rule can stop it."""
+    buffer = io.BytesIO()
+    Image.new('RGB', (10, 10), 'red').save(buffer, format=fmt)
+    return SimpleUploadedFile(name, buffer.getvalue(), content_type=f'image/{fmt.lower()}')
+
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
+class ProfilePictureTests(APITestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.artisan_user = User.objects.create_user(
+            email='newartisan@example.com', username='newartisan',
+            usertype='artisan', phone='0766666666', password='testpass123')
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
+        super().tearDownClass()
+
+    def post_profile(self, picture):
+        self.client.force_login(self.artisan_user)
+        return self.client.post(PROFILE_URL, {**PROFILE_DATA, 'profile_picture': picture}, format='multipart')
+
+    def test_png_picture_is_accepted(self):
+        # Control test
+        self.assertEqual(self.post_profile(image_file('me.png', 'PNG')).status_code, 201)
+
+    def test_gif_picture_is_rejected(self):
+        response = self.post_profile(image_file('me.gif', 'GIF'))
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('profile_picture', response.data)
+
+    def test_real_image_with_an_mp4_name_is_rejected(self):
+        response = self.post_profile(image_file('me.mp4', 'PNG'))
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('profile_picture', response.data)
