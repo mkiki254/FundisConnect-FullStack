@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'artisans_api.apps.ArtisansApiConfig',
     'customers_api.apps.CustomersApiConfig',
     'payment_api.apps.PaymentApiConfig',
+    'routing_api.apps.RoutingApiConfig',
     'leaflet',
     'django.contrib.gis',
     'django.contrib.admin',
@@ -176,6 +177,7 @@ REST_FRAMEWORK = {
     # Rates for views that opt in with throttle_scope
     'DEFAULT_THROTTLE_RATES': {
         'auth': '10/min',
+        'routing': '60/min',
     },
 }
 
@@ -192,6 +194,9 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 FRONTEND_URL = env('FRONTEND_URL')
+
+# OpenRouteService Key
+ORS_API_KEY = env('ORS_API_KEY')
 
 # Mpesa STK Push configuration
 MPESA_ENVIRONMENT = env('MPESA_ENVIRONMENT', default='sandbox')
