@@ -3,8 +3,6 @@ import { useState, useEffect, useCallback } from 'react'
 import client from '@/api'
 import ProfileCard from './JobRequests/ProfileCard'
 import Map from '../Map'
-import CalculateDistance from '../CalculateDistance'
-
 
 
 export default function JobRequests(props){
@@ -21,6 +19,8 @@ export default function JobRequests(props){
     const handleLocationChange = useCallback(newLocate => {
         setLocate(newLocate);
     }, []);
+
+    const [distances, setDistances] = useState({})   // artisan id -> driving distance in km
 
     // Redirecting users after logging
     // timeout of 2 seconds to allow reading success message
@@ -42,41 +42,51 @@ export default function JobRequests(props){
       function handleFindArtisans(){
         setFindArtisans(true)
       }
-    
-    // console.log(artisanData)
-    // console.log(locate)
 
-    const location = [36.8219, -1.2921]
-    
-    const modifiedArtisanData = artisans.map(artisan => {
-      const startLatLng = artisan.geometry.coordinates;
-      const endLatLng = locate ? [locate.x, locate.y] : location
-      const distance = Math.round(CalculateDistance({ startLatLng, endLatLng, locate }));
-      return {
-        ...artisan,
-        distance: distance
-      }
-    });    
+    // artisans of the chosen trade. It accepts at most 50 destinations per request.
+    useEffect(() => {
+        if (!findArtisans || !locate) return;
+        const matching = artisans
+            .filter(artisan => artisan.properties.specialization === selectedService)
+            .slice(0, 50);
+        if (matching.length === 0) return;
 
-    const SortedArtisanData = findArtisans && locate && modifiedArtisanData.map((artisan) => artisan).sort((a, b) => a.distance - b.distance)
-    // console.log(SortedArtisanData)
+        let ignore = false;   // drop an answer that arrives after the inputs changed
+        client.post('/api/route/distances/', {
+            from: [locate.x, locate.y],
+            to: matching.map(artisan => artisan.geometry.coordinates),
+        })
+            .then(response => {
+                if (ignore) return;
+                const byArtisan = {};
+                matching.forEach((artisan, index) => {
+                    byArtisan[artisan.id] = response.data.distances_km[index];
+                });
+                setDistances(byArtisan);
+            })
+            .catch(() => { if (!ignore) setDistances({}); });   // the list still shows, without distances
+        return () => { ignore = true; };
+    }, [findArtisans, locate, selectedService, artisans]);
 
-    const artisanDataElements = findArtisans && locate && SortedArtisanData && SortedArtisanData.map(artisan => {
-        if(artisan.properties.specialization == selectedService){
-          return(
-            <>
-              < ProfileCard
-                key = {artisan.id}
-                id = {artisan.id}
-                profilePic={artisan.properties.profile_picture}
-                firstname = {artisan.properties.first_name}
-                lastname = {artisan.properties.last_name}
-                distance = {artisan.distance}
-                />
-            </>
-          )
-        }
-    })
+    const sortedArtisans = artisans
+        .filter(artisan => artisan.properties.specialization === selectedService)
+        .map(artisan => {
+            const km = distances[artisan.id];
+            return { ...artisan, distance: km == null ? null : Math.round(km * 10) / 10 };
+        })
+        // nearest first; artisans with no known distance go last
+        .sort((a, b) => (a.distance ?? Infinity) - (b.distance ?? Infinity));
+
+    const artisanDataElements = findArtisans && locate && sortedArtisans.map(artisan => (
+        <ProfileCard
+            key={artisan.id}
+            id={artisan.id}
+            profilePic={artisan.properties.profile_picture}
+            firstname={artisan.properties.first_name}
+            lastname={artisan.properties.last_name}
+            distance={artisan.distance}
+        />
+    ));
   
     return(
         <>

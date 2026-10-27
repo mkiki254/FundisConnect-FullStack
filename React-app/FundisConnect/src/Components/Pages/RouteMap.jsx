@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline, Tooltip } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import "../../Styles/Map.css"
+import client from '@/api'
 
 export default function RouteMap(props) {
   const [routeData, setRouteData] = useState(null);
@@ -13,19 +14,15 @@ export default function RouteMap(props) {
     fetchRoute();
   }, []);
 
-  async function fetchRoute() {
-    const apiKey = '5b3ce3597851110001cf62481d880483044249398760d0ebddfb5f05';
-    const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=${apiKey}&start=${startLatLng[0]},${startLatLng[1]}&end=${endLatLng[0]},${endLatLng[1]}`;
-    // const url = `http://localhost:8080/ors/v2/directions/driving-car?&start=${startLatLng[0]},${startLatLng[1]}&end=${endLatLng[0]},${endLatLng[1]}`;
-
+    async function fetchRoute() {
     try {
-      const response = await fetch(url);
-      if (response.ok) {
-        const data = await response.json();
-        setRouteData(data);
-      } else {
-        setError('Error fetching route');
-      }
+      const response = await client.get('/api/route/', {
+        params: {
+          from: `${startLatLng[0]},${startLatLng[1]}`,
+          to: `${endLatLng[0]},${endLatLng[1]}`,
+        },
+      });
+      setRouteData(response.data);
     } catch (error) {
       setError('Error fetching route');
     }
@@ -61,7 +58,9 @@ export default function RouteMap(props) {
         </div>
         <div className='map'>
             <MapContainer center={[startLatLng[1], startLatLng[0]]} zoom={13}>
-            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
             <Marker position={[startLatLng[1], startLatLng[0]]}>
                 <Popup>Start Location</Popup>
                 <Tooltip>"Your location"</Tooltip>
