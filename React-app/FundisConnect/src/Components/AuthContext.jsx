@@ -54,6 +54,33 @@ export const AuthProvider = ({ children }) => {
         }).catch((error) => setUserPermit('no permissions'));
     }, [activeUser])
 
+    // The session can end outside this tab, for example by logging out of the Django admin.
+    // Ask the server again whenever the user comes back to this tab.
+    useEffect(() => {
+        function recheckSession() {
+            if (document.visibilityState !== 'visible') return
+            client.get('/api/user/')
+                .then(res => {
+                    setIsLoggedIn(true)
+                    setUserDetails(res.data)
+                    client.get('/api/permissions')
+                        .then(r => setUserPermit(r.data.permissions[0]))
+                        .catch(() => {})
+                })
+                .catch(() => {
+                    setIsLoggedIn(false)
+                    setUserDetails(null)
+                    setUserPermit('no permissions')
+                    setUsername('no username')
+                })
+        }
+        document.addEventListener('visibilitychange', recheckSession)
+        window.addEventListener('focus', recheckSession)
+        return () => {
+            document.removeEventListener('visibilitychange', recheckSession)
+            window.removeEventListener('focus', recheckSession)
+        }
+    }, [])
 
     // Function handling Logout. Registration and Login handled in the Signup.jsx
     function submitLogout(e){
