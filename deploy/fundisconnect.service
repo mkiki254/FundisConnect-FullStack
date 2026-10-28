@@ -1,0 +1,18 @@
+[Unit]
+Description=FundisConnect (Gunicorn)
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+User=fundis
+Group=fundis
+WorkingDirectory=/srv/fundisconnect/app/FundisConnect
+ExecStart=/srv/fundisconnect/venv/bin/gunicorn --config /srv/fundisconnect/app/deploy/gunicorn.conf.py FundisConnect.wsgi:application
+Restart=on-failure
+RestartSec=3
+# Light hardening that cannot get in the way of uploads
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,42 @@
+# {$SITE_ADDRESS:localhost} reads the domain from the environment (set on the server in D5).
+# With a real domain, Caddy gets and renews the HTTPS certificate by itself.
+{$SITE_ADDRESS:localhost} {
+	encode zstd gzip
+
+	# A request may hold a 50 MB video plus the form fields
+	request_body {
+		max_size 55MB
+	}
+
+	# The API and the Django admin go to Gunicorn. The paths are exact on purpose:
+	# /admin-home is a React page and must not be sent to Django.
+	@django path /api/* /admin /admin/*
+	handle @django {
+		reverse_proxy 127.0.0.1:8000
+	}
+
+	# Admin styles and scripts gathered by "manage.py collectstatic"
+	handle_path /static/* {
+		root * /srv/fundisconnect/app/FundisConnect/staticfiles
+		file_server
+	}
+
+	# Uploaded profile pictures, job photos and videos
+	handle_path /media/* {
+		root * /srv/fundisconnect/app/FundisConnect/media
+		header X-Content-Type-Options nosniff
+		file_server
+	}
+
+	# Everything else is the React app. Unknown paths fall back to index.html,
+	# so reloading /customer-home or /admin-home works.
+	handle {
+		root * /srv/fundisconnect/app/React-app/FundisConnect/dist
+		header X-Frame-Options DENY
+		header X-Content-Type-Options nosniff
+		@assets path /assets/*
+		header @assets Cache-Control "public, max-age=31536000, immutable"
+		try_files {path} /index.html
+		file_server
+	}
+}
