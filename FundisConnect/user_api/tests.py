@@ -109,3 +109,33 @@ class LoginTests(APITestCase):
     def test_missing_email_returns_400(self):
         response = self.client.post(LOGIN_URL, {'password': 'testpass123'}, format='json')
         self.assertEqual(response.status_code, 400)
+
+    def test_rate_limit_cannot_be_dodged_with_a_forged_forwarded_header(self):
+        statuses = []
+        for i in range(12):
+            response = self.client.post(
+                LOGIN_URL, {**self.credentials, 'password': 'wrong-password'},
+                format='json', HTTP_X_FORWARDED_FOR=f'10.0.0.{i}')   # a different fake address each time
+            statuses.append(response.status_code)
+        self.assertIn(429, statuses)
+
+class ApiResponseFormatTests(APITestCase):
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            email='customer1@example.com', username='customer1',
+            usertype='customer', phone='0711111111', password='testpass123')
+
+    def test_a_browser_gets_json_not_the_browsable_api_page(self):
+        # DRF's HTML "browsable API" is a development aid. The public site answers with JSON only.
+        self.client.force_login(self.user)
+        browser_accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+        response = self.client.get('/api/user/', HTTP_ACCEPT=browser_accept)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+    def test_pages_cannot_be_embedded_in_other_sites(self):
+        # Stops clickjacking: another site showing ours inside an invisible frame
+        response = self.client.get('/admin/login/')
+        self.assertEqual(response['X-Frame-Options'], 'DENY')

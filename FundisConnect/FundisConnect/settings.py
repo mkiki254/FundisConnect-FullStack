@@ -43,8 +43,18 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
 
 
-# Working on django admin
-X_FRAME_OPTIONS = 'ALLOWALL'
+# Production security
+# These switch on automatically when DEBUG is off. Set DJANGO_HTTPS=False in .env only to
+USE_HTTPS = env.bool('DJANGO_HTTPS', default=not DEBUG)
+SESSION_COOKIE_SECURE = USE_HTTPS      
+CSRF_COOKIE_SECURE = USE_HTTPS
+SECURE_SSL_REDIRECT = USE_HTTPS       
+SECURE_HSTS_SECONDS = 3600 if USE_HTTPS else 0  
+SECURE_HSTS_INCLUDE_SUBDOMAINS = USE_HTTPS
+if USE_HTTPS:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+X_FRAME_OPTIONS = 'DENY'
+SILENCED_SYSTEM_CHECKS = ['security.W021']
 
 
 # Application definition
@@ -179,6 +189,10 @@ REST_FRAMEWORK = {
         'auth': '10/min',
         'routing': '60/min',
     },
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'NUM_PROXIES': env.int('TRUSTED_PROXIES', default=0),
 }
 
 # Setting the media root
@@ -210,6 +224,8 @@ MPESA_SHORTCODE = env('MPESA_SHORTCODE')
 MPESA_EXPRESS_SHORTCODE = env('MPESA_EXPRESS_SHORTCODE')
 
 MPESA_PASSKEY = env('MPESA_PASSKEY')
+
+MPESA_CALLBACK_URL = env('MPESA_CALLBACK_URL')
 
 # Jazzmin settings
 JAZZMIN_SETTINGS = JAZZMIN_SETTINGS

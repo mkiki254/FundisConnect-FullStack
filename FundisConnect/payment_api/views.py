@@ -12,6 +12,7 @@ from .models import ArtisanPayment
 from datetime import datetime
 from django.core.cache import cache
 from .models import ArtisanPayment
+from django.conf import settings
 
 
 class PaymentAPIView(APIView):
@@ -35,7 +36,7 @@ class PaymentAPIView(APIView):
             amount = 1
             phone_number = modified_mpesa_number
             transaction_description = "Description"
-            callback_url = 'https://50cc-102-219-210-201.ngrok-free.app/api/payment/results/'
+            callback_url = settings.MPESA_CALLBACK_URL
             response = cl.stk_push(phone_number, amount,reference, transaction_description, callback_url)
             print(response)
             return Response(response)
