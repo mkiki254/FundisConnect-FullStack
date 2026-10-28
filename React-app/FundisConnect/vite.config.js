@@ -19,7 +19,7 @@ export default defineConfig({
     // In development, forward these paths to Django so the browser sees a single address
     proxy: {
       '/api': django,
-      '/admin': django,
+      '^/admin(/|$)': django,
       '/media': django,
       '/static': django,
     },
