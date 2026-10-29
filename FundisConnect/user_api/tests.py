@@ -1,6 +1,17 @@
+import shutil
+import tempfile
+from io import StringIO
+
 from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase
 from django.core.cache import cache
+from django.core.management import call_command
+from django.core.management.base import CommandError
+from django.test import override_settings
+
+from artisans_api.models import ArtisanPersonalInfo
+from customers_api.models import CustomerJobRequests
+from payment_api.models import ArtisanPayment
 
 User = get_user_model()
 REGISTER_URL = '/api/register'
@@ -139,3 +150,56 @@ class ApiResponseFormatTests(APITestCase):
         # Stops clickjacking: another site showing ours inside an invisible frame
         response = self.client.get('/admin/login/')
         self.assertEqual(response['X-Frame-Options'], 'DENY')
+
+TEMP_MEDIA_ROOT = tempfile.mkdtemp()   # generated avatars go here, never into your real media/ folder
+DEMO_PASSWORD = 'demo-pass-123'
+
+
+@override_settings(MEDIA_ROOT=TEMP_MEDIA_ROOT)
+class SeedDemoTests(APITestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
+        super().tearDownClass()
+
+    def seed(self):
+        call_command('seed_demo', password=DEMO_PASSWORD, stdout=StringIO())
+
+    def assert_demo_marketplace(self):
+        self.assertEqual(User.objects.filter(usertype='customer').count(), 2)
+        self.assertEqual(ArtisanPersonalInfo.objects.count(), 8)
+        self.assertEqual(CustomerJobRequests.objects.count(), 3)
+        self.assertEqual(ArtisanPayment.objects.count(), 1)
+
+    def test_creates_the_demo_marketplace(self):
+        self.seed()
+        self.assert_demo_marketplace()
+        trades = set(ArtisanPersonalInfo.objects.values_list('specialization', flat=True))
+        self.assertEqual(trades, {'plumber', 'electrician', 'carpenter', 'mason', 'tiling', 'painter'})
+        for profile in ArtisanPersonalInfo.objects.all():
+            self.assertTrue(profile.profile_picture, f'{profile} has no picture')
+
+    def test_running_it_twice_does_not_duplicate_anything(self):
+        self.seed()
+        self.seed()
+        self.assert_demo_marketplace()
+
+    def test_demo_accounts_can_log_in(self):
+        self.seed()
+        for email in ('demo.customer1@example.com', 'demo.artisan1@example.com'):
+            cache.clear()   # the login endpoint is rate-limited
+            response = self.client.post('/api/login', {'email': email, 'password': DEMO_PASSWORD}, format='json')
+            self.assertEqual(response.status_code, 200, email)
+
+    def test_demo_shows_the_pay_per_lead_rule(self):
+        # Artisan 1 paid for customer 1's request only, so customer 2 stays hidden
+        self.seed()
+        self.client.force_login(User.objects.get(email='demo.artisan1@example.com'))
+        response = self.client.get('/api/customer/jobrequest/customer-details/')
+        self.assertEqual({item['email'] for item in response.data}, {'demo.customer1@example.com'})
+
+    def test_a_password_is_required(self):
+        # The message must mention the option; a command that doesn't exist yet would not
+        with self.assertRaisesMessage(CommandError, '--password'):
+            call_command('seed_demo', stdout=StringIO(), stderr=StringIO())
