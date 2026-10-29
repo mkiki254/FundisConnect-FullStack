@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import client from '@/api'
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
-
-const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
 
 const PasswordResetConfirm = () => {
   const [password, setPassword] = useState('');

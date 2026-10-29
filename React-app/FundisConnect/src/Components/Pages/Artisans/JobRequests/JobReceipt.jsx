@@ -1,18 +1,11 @@
 import { Button } from 'react-bootstrap'
 import { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import client from '@/api'
 import PrintableReceipt from './PrintableReceipt';
 import { useReactToPrint } from 'react-to-print';
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
-axios.defaults.xsrfCookieName = 'csrftoken';
-axios.defaults.xsrfHeaderName = 'X-CSRFToken';
-axios.defaults.withCredentials = true;
-
-const client = axios.create({
-  baseURL: 'http://127.0.0.1:8000'
-});
 
 const JobReceipt = ({ job_id, customer, job_title }) => {
   const [allAcceptedJobs, setAllAcceptedJobs] = useState([]);

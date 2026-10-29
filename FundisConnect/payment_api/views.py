@@ -12,6 +12,7 @@ from .models import ArtisanPayment
 from datetime import datetime
 from django.core.cache import cache
 from .models import ArtisanPayment
+from django.conf import settings
 
 
 class PaymentAPIView(APIView):
@@ -35,17 +36,23 @@ class PaymentAPIView(APIView):
             amount = 1
             phone_number = modified_mpesa_number
             transaction_description = "Description"
-            callback_url = 'https://50cc-102-219-210-201.ngrok-free.app/api/payment/results/'
+            callback_url = settings.MPESA_CALLBACK_URL
             response = cl.stk_push(phone_number, amount,reference, transaction_description, callback_url)
             print(response)
             return Response(response)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)            
 
 class PaymentResultsAPIView(APIView):
-    permission_classes = (permissions.AllowAny, )   
-     
+    def get_permissions(self):
+        # M-Pesa's servers deliver the payment result with a POST and cannot log in.
+        # Reading payment records is for logged-in artisans only.
+        if self.request.method == 'POST':
+            return [permissions.AllowAny()]
+        return [permissions.IsAuthenticated(), IsArtisan()]
+
     def get(self, request):
-        artisan_payments = ArtisanPayment.objects.all()
+        # An artisan sees only their own payments
+        artisan_payments = ArtisanPayment.objects.filter(artisan=request.user)
         serializer = ArtisanPaymentSerializer(artisan_payments, many=True)
         return Response(serializer.data)
 

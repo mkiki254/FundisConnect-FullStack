@@ -1,1 +1,10 @@
-env/
+.venv/
+__pycache__/
+.env
+.env.*
+!.env.example
+*.sqlite3
+staticfiles/
+*.exe 
+*.whl
+.vscode/*

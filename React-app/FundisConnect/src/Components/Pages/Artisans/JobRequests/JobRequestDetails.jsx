@@ -2,19 +2,12 @@ import { useAuthContext } from '../../../AuthContext'
 import RouteMap from '../../RouteMap'
 import { Row, Col, Button } from 'react-bootstrap'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import client from '@/api'
 import "../../../../Styles/JobRequests.css"
 import { useNavigate } from 'react-router-dom'
 import JobAccepted from './JobAccepted'
 import JobDeclined from './JobDeclined'
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
-
-const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
 
 export default function JobRequestDetails(){
     const { jobRequestId } = useAuthContext()

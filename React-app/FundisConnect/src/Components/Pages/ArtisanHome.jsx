@@ -5,15 +5,8 @@ import ArtisanProfile from './Artisans/ArtisanProfile'
 import ViewProfile from './Artisans/ViewProfile'
 import JobRequests from './Artisans/JobRequests'
 import AcceptedJobs from './Artisans/AcceptedJobs'
-import axios from 'axios'
+import client from '@/api'
 
-axios.defaults.xsrfCookieName = 'csrftoken'
-axios.defaults.xsrfHeaderName = 'X-CSRFToken'
-axios.defaults.withCredentials = true
-
-const client = axios.create({
-    baseURL: "http://127.0.0.1:8000"
-})
 
 
 export default function Artisan(){

@@ -1,33 +1,11 @@
-import { useState, useEffect } from 'react'
-
-
-export default function Artisan(){  
-    useEffect(() => {
-        const iframe = document.getElementById('myIframe');
-        const container = document.getElementById('iframeContainer');
-        const adjustContainerHeight = () => {
-          container.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
-        };
-        iframe.addEventListener('load', adjustContainerHeight);
-        return () => {
-          iframe.removeEventListener('load', adjustContainerHeight);
-        };
-      }, []);
-
+export default function AdminHome() {
     return (
-        <div id="iframeContainer">
-            <iframe 
-            id="myIframe"
-            src="http://127.0.0.1:8000/admin/"
-            style={{
-                width: '100%',
-                height: '100vh',
-                border: 'none',
-                overflow: 'hidden',
-              }}
-            />
+        <div className="d-flex justify-content-center align-items-center flex-column" style={{ minHeight: '60vh' }}>
+            <h1>Admin</h1>
+            <p>Manage users, artisan profiles, job requests and payments in the site administration.</p>
+            <a className="btn btn-primary" href="/admin/" target="_blank" rel="noopener noreferrer">
+                Open the admin site
+            </a>
         </div>
     )
 }
-
-

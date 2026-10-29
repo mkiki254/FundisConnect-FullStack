@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 """
 import os
+import environ
 from .juzmin import JAZZMIN_SETTINGS
 
 # Construct the complete path
@@ -19,43 +20,41 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Defining the path for GDAL
-# https://www.pointsnorthgis.ca/blog/geodjango-gdal-setup-windows-10/
-if os.name == 'nt':
-    VIRTUAL_ENV_BASE = os.environ['VIRTUAL_ENV']
-    os.environ['PATH'] = os.path.join(VIRTUAL_ENV_BASE, r'.\Lib\site-packages\osgeo') + ';' + os.environ['PATH']
-    os.environ['PROJ_LIB'] = os.path.join(VIRTUAL_ENV_BASE, r'.\Lib\site-packages\osgeo\data\proj') + ';' + os.environ['PATH']
-
+# Read configuration from FundisConnect/.env
+env = environ.Env(DJANGO_DEBUG=(bool, False))
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-qjb%06i^jq=y+lb$1^1tvldin#8ue%xh*)n9-hspcr0-zrzf3x'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DJANGO_DEBUG')
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    '50cc-102-219-210-201.ngrok-free.app',
-]
+ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=[])
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    'http://127.0.0.1:3000',
-]
+CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS')
 
 CORS_ALLOW_CREDENTIALS = True
 
 # So i have to include trusted origins
-CSRF_TRUSTED_ORIGINS = [
-    'http://127.0.0.1:3000',
-]
+CSRF_TRUSTED_ORIGINS = env.list('CSRF_TRUSTED_ORIGINS')
 
 
-# Working on django admin
-X_FRAME_OPTIONS = 'ALLOWALL'
+# Production security
+# These switch on automatically when DEBUG is off. Set DJANGO_HTTPS=False in .env only to
+USE_HTTPS = env.bool('DJANGO_HTTPS', default=not DEBUG)
+SESSION_COOKIE_SECURE = USE_HTTPS      
+CSRF_COOKIE_SECURE = USE_HTTPS
+SECURE_SSL_REDIRECT = USE_HTTPS       
+SECURE_HSTS_SECONDS = 3600 if USE_HTTPS else 0  
+SECURE_HSTS_INCLUDE_SUBDOMAINS = USE_HTTPS
+if USE_HTTPS:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+X_FRAME_OPTIONS = 'DENY'
+SILENCED_SYSTEM_CHECKS = ['security.W021']
 
 
 # Application definition
@@ -69,6 +68,7 @@ INSTALLED_APPS = [
     'artisans_api.apps.ArtisansApiConfig',
     'customers_api.apps.CustomersApiConfig',
     'payment_api.apps.PaymentApiConfig',
+    'routing_api.apps.RoutingApiConfig',
     'leaflet',
     'django.contrib.gis',
     'django.contrib.admin',
@@ -123,11 +123,11 @@ WSGI_APPLICATION = 'FundisConnect.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'fundisconnect',
-        'USER': 'postgres',
-        'PASSWORD': 'Karis123!',
-        'HOST': 'localhost',
-        'PORT': '5432'
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST', default='127.0.0.1'),
+        'PORT': env('DB_PORT', default='5432'),
     }
 }
 
@@ -178,12 +178,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user_api.AppUser'
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES' : (
-    'rest_framework.permissions.IsAuthenticated',
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     ),
-    'DEFAULT_AUTHENTICATION_CLASSES' : (
-    'rest_framework.authentication.SessionAuthentication',
-    )
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    # Rates for views that opt in with throttle_scope
+    'DEFAULT_THROTTLE_RATES': {
+        'auth': '10/min',
+        'routing': '60/min',
+    },
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'NUM_PROXIES': env.int('TRUSTED_PROXIES', default=0),
 }
 
 # Setting the media root
@@ -191,29 +200,32 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # SMTP Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'fundisconnectke@gmail.com'
-EMAIL_HOST_PASSWORD = 'dirxcorraznucixu'
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
-FRONTEND_URL = 'http://127.0.0.1:3000'
+FRONTEND_URL = env('FRONTEND_URL')
+
+# OpenRouteService Key
+ORS_API_KEY = env('ORS_API_KEY')
 
 # Mpesa STK Push configuration
-MPESA_ENVIRONMENT = 'sandbox'
+MPESA_ENVIRONMENT = env('MPESA_ENVIRONMENT', default='sandbox')
 
-MPESA_CONSUMER_KEY = "HNHqE4JY2Tg67QnXHHoGksgruRuVMpWT"
+MPESA_CONSUMER_KEY = env('MPESA_CONSUMER_KEY')
 
-MPESA_CONSUMER_SECRET = "QYQrn0yAXWQqk2kd"
+MPESA_CONSUMER_SECRET = env('MPESA_CONSUMER_SECRET')
 
-MPESA_SHORTCODE = "174379"
+MPESA_SHORTCODE = env('MPESA_SHORTCODE')
 
-MPESA_EXPRESS_SHORTCODE = "174379"
+MPESA_EXPRESS_SHORTCODE = env('MPESA_EXPRESS_SHORTCODE')
 
-MPESA_PASSKEY = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919"
+MPESA_PASSKEY = env('MPESA_PASSKEY')
 
-LNM_PHONE_NUMBER = "254714456992"
+MPESA_CALLBACK_URL = env('MPESA_CALLBACK_URL')
 
 # Jazzmin settings
 JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
